@@ -1,4 +1,4 @@
-package com.waddle_ware.heslington_hussle;
+package com.waddle_ware.heslington_hustle;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.Texture;

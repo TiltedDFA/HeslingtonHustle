@@ -2,7 +2,7 @@ sourceCompatibility = 1.8
 sourceSets.main.java.srcDirs = [ "src/" ]
 sourceSets.main.resources.srcDirs = ["../assets"]
 
-project.ext.mainClassName = "com.waddle_ware.heslington_hussle.DesktopLauncher"
+project.ext.mainClassName = "com.waddle_ware.heslington_hustle.DesktopLauncher"
 project.ext.assetsDir = new File("../assets")
 
 import org.gradle.internal.os.OperatingSystem

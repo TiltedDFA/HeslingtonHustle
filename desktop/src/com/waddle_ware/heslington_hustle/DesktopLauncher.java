@@ -1,8 +1,8 @@
-package com.waddle_ware.heslington_hussle;
+package com.waddle_ware.heslington_hustle;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.waddle_ware.heslington_hussle.Game;
+import com.waddle_ware.heslington_hustle.Game;
 
 // Please note that on macOS your application needs to be started with the -XstartOnFirstThread JVM argument
 public class DesktopLauncher {
