@@ -1,5 +1,7 @@
 package com.waddle_ware.heslington_hustle.core;
 
+import javax.swing.*;
+
 public class Energy
 {
     /**
@@ -36,14 +38,38 @@ public class Energy
      * Attempts to add specified amount of energy to the current amount.
      *
      * @param amount The amount of energy to be added by the activity.
-     * @return This will return true if the amount to be added to current doesn't exceed the limit, false otherwise.
      */
     public ResourceExitConditions TryActivityType(ActivityType type)
     {
+        int cost_of_resource;
         switch(type)
         {
             case Study:
+                cost_of_resource = EnergyPerStudy;
+                break;
+            case Recreation:
+                cost_of_resource = EnergyPerRecreational;
+                break;
+            case Food:
+                cost_of_resource = EnergyPerFood;
+                break;
+                //This should never happen
+            default:
+                cost_of_resource = -99999999;
+                break;
         }
+        this.current += cost_of_resource;
+        if(this.current < 0)
+        {
+            this.current -= cost_of_resource;
+            return ResourceExitConditions.TooLow;
+        }
+        if(this.current > this.limit)
+        {
+            this.current -= cost_of_resource;
+            return ResourceExitConditions.TooHigh;
+        }
+        return ResourceExitConditions.IsOk;
     }
     /**
      * Returns the current amount of energy.
