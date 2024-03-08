@@ -1,6 +1,5 @@
 package com.waddle_ware.heslington_hustle.core;
 
-import javax.swing.*;
 
 public class Energy
 {
@@ -37,7 +36,6 @@ public class Energy
     /**
      * Attempts to add specified amount of energy to the current amount.
      *
-     * @param amount The amount of energy to be added by the activity.
      */
     public ResourceExitConditions TryActivityType(ActivityType type)
     {
