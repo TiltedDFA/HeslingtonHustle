@@ -1,0 +1,28 @@
+@startuml
+class Entity
+{
+    sprite: Sprite
+    +update(): void
+    +InitSprite(Texture texture): void
+}
+note left
+the sprite should contain
+position information
+end note
+class Interactable
+{
+    +HasClicked(Mouse mouse): bool
+}
+class Player
+{
+    velocity: vector2i
+    +SetVelocity(): void
+}
+class Building
+{
+    name: String
+}
+Building --|> Interactable
+Player --|> Entity
+Interactable --|> Entity
+@enduml
