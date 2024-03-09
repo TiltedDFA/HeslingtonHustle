@@ -34,10 +34,32 @@ public class Energy
         this.current = limit;
     }
     /**
+     * Returns the current amount of energy.
+     * @return the current amount of energy.
+     */
+    public int getCurrentEnergy()
+    {
+        return this.current;
+    }
+    /**
+     * Resets the energy to the limit.
+     * Intended to be used upon the day resetting.
+     */
+    public void reset()
+    {
+        this.current = this.limit;
+    }
+    private ExitConditions isOk(int amount)
+    {
+        if(amount < 0) return ExitConditions.TooLow;
+        if(amount > this.limit) return ExitConditions.TooHigh;
+        return ExitConditions.IsOk;
+    }
+    /**
      * Attempts to add specified amount of energy to the current amount.
      *
      */
-    public ResourceExitConditions TryActivityType(ActivityType type)
+    public ResourceExitConditions tryActivityType(ActivityType type)
     {
         int cost_of_resource;
         switch(type)
@@ -56,33 +78,26 @@ public class Energy
                 cost_of_resource = -99999999;
                 break;
         }
-        this.current += cost_of_resource;
-        if(this.current < 0)
-        {
-            this.current -= cost_of_resource;
-            return ResourceExitConditions.TooLow;
-        }
-        if(this.current > this.limit)
-        {
-            this.current -= cost_of_resource;
-            return ResourceExitConditions.TooHigh;
-        }
-        return ResourceExitConditions.IsOk;
+        final int potential_state = this.current + cost_of_resource;
+        final ExitConditions condition = isOk(potential_state);
+        return new ResourceExitConditions(ResourceTypes.Energy, condition);
     }
     /**
-     * Returns the current amount of energy.
-     * @return the current amount of energy.
+     * An unchecked command that will do the activity
+     * @param type the type of activity
      */
-    public int GetCurrentEnergy()
+    void doActivity(ActivityType type)
     {
-        return this.current;
-    }
-    /**
-     * Resets the energy to the limit.
-     * Intended to be used upon the day resetting.
-     */
-    public void ResetEnergy()
-    {
-        this.current = this.limit;
+        switch(type)
+        {
+            case Study:
+                this.current += EnergyPerStudy;
+                return;
+            case Recreation:
+                this.current += EnergyPerRecreational;
+                return;
+            case Food:
+                this.current += EnergyPerFood;
+        }
     }
 }

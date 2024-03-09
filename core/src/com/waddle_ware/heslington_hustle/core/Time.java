@@ -1,8 +1,11 @@
 package com.waddle_ware.heslington_hustle.core;
 
+
+import java.time.Clock;
+
 //Used to manage time in a day
 //16hours
-public class Time
+public class Time implements ResourceBase
 {
     /**
      * These constants will be used in core to determine the cost
@@ -22,23 +25,58 @@ public class Time
      * This constant variable will be used to specify the amount
      * of time that needs to pass irl for 1 unit of time to decrement
      */
-    private final int   seconds_irl_to_decrement;
-    private final int   game_minutes_per_interval;
+    private final int   milliseconds_irl_to_decrement;
+    private final int   game_minutes_per_decrement;
     private int         minutes_remaining;
+    private final Clock timer;
+    /**
+     * This variable will be used to check if the time to decrement has elapsed
+     */
+    private long        end_point;
 
-    public Time(int mins_per_inter, int secs_to_dec)
+    public Time(int mins_per_dec, int secs_to_dec)
     {
         this.minutes_remaining = 60 * 16;
-        this.game_minutes_per_interval = mins_per_inter;
-        this.seconds_irl_to_decrement = secs_to_dec;
+        this.game_minutes_per_decrement = mins_per_dec;
+        this.milliseconds_irl_to_decrement = secs_to_dec * 1000;
+        this.timer = Clock.systemUTC();
+        this.end_point = this.timer.millis() + this.milliseconds_irl_to_decrement;
+    }
+    //responsible for passively draining time
+    public void update()
+    {
+        if(this.end_point >= this.timer.millis()) return;
+        this.minutes_remaining -= this.game_minutes_per_decrement;
+        this.end_point += this.timer.millis() + this.milliseconds_irl_to_decrement;
+    }
+    // This is going to convert the minute representation to bars
+
+    @Override
+    public void reset()
+    {
+        this.minutes_remaining = 60 * 16;
     }
 
-    // This is going to convert the minute representation to bars
-    public int GetIntervalsRemaining()
+    public int getIntervalsRemaining()
     {
+        if(this.minutes_remaining < 1) return 0;
+
         return (int) Math.ceil((double) this.minutes_remaining / MinsInInterval);
     }
-    public ResourceExitConditions TryActivityType(ActivityType type)
+    public int getMinutesRemaining()
+    {
+        if(this.minutes_remaining < 1) return 0;
+
+        return this.minutes_remaining;
+    }
+    @Override
+    public ExitConditions isOk(int amount)
+    {
+        if(amount < 0) return ExitConditions.TooLow;
+        return ExitConditions.IsOk;
+    }
+    @Override
+    public ResourceExitConditions tryActivityType(ActivityType type)
     {
         int cost_of_resource;
         switch(type)
@@ -57,12 +95,28 @@ public class Time
                 cost_of_resource = -99999999;
                 break;
         }
-        this.minutes_remaining += cost_of_resource;
-        if(this.minutes_remaining < 0)
+        final int potential_state = this.minutes_remaining + cost_of_resource;
+        final ExitConditions condition = isOk(potential_state);
+        return new ResourceExitConditions(ResourceTypes.Time, condition);
+    }
+
+    /**
+     * An unchecked command that will do the activity
+     * @param type the type of activity
+     */
+    @Override
+    public void doActivity(ActivityType type)
+    {
+        switch(type)
         {
-            this.minutes_remaining -= cost_of_resource;
-            return ResourceExitConditions.TooLow;
+            case Study:
+                this.minutes_remaining += TimePerStudy;
+                return;
+            case Recreation:
+                this.minutes_remaining += TimePerRecreational;
+                return;
+            case Food:
+                this.minutes_remaining += TimePerFood;
         }
-        return ResourceExitConditions.IsOk;
     }
 }
