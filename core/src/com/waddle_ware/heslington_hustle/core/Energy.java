@@ -14,15 +14,6 @@ public class Energy
      */
     final private int limit;
     private int current;
-
-    /**
-     * Initialises the energy class with a default limit of 4 energy
-     */
-    public Energy()
-    {
-        this.limit = 4;
-        this.current = this.limit;
-    }
     /**
      * Initialises the energy class with a default limit of 4 energy
      *

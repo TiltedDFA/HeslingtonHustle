@@ -15,7 +15,7 @@ public class Core
 
     public Core()
     {
-        this.energy = new Energy();
+        this.energy = new Energy(4);
         this.time = new Time(15,3);
         this.study_count = new int[7];
         this.relax_count = new int[7];
