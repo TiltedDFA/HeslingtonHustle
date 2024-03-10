@@ -6,7 +6,10 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -15,47 +18,64 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  * It implements the Screen interface and manages rendering and input handling.
  */
 public class PlayScreen implements Screen {
-    private SpriteBatch batch;
-    private Texture img;
-    private float x, y; // Sprite position
     private OrthographicCamera camera;
     private Viewport viewport;
-
-    //  variables for sprite and world dimensions
-    private float spriteWidth;
-    private float spriteHeight;
-    private float worldWidth;
-    private float worldHeight;
+    private TiledMap tile_map;
+    private OrthogonalTiledMapRenderer map_renderer;
+    private boolean is_fullscreen = false;  // Track fullscreen state
+    private Texture player_sprite; // Player image
+    private float x, y; // Player position
+    private float world_width;
+    private float world_height;
+    private float player_size;
 
     /**
      * Called when this screen becomes the current screen.
-     * Initialises sprite, camera, and viewport.
+     * Initialises camera, viewport, tile map, and player sprite.
      */
     @Override
     public void show() {
-        batch = new SpriteBatch();
-        img = new Texture("badlogic.jpg");
+        // Create camera and viewport
+        camera = new OrthographicCamera();
+
+        // Load tile Map
+        tile_map = new TmxMapLoader().load("map.tmx"); // load tile map
+        map_renderer = new OrthogonalTiledMapRenderer(tile_map);
+
+        player_sprite = new Texture("player.png"); // load player sprite
         x = 0;
         y = 0;
 
-        // Create camera and viewport
-        camera = new OrthographicCamera();
-        viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
-        viewport.apply();
+        // Set target aspect ratio for tile map
+        float target_aspect_ratio = 16f / 9f;
 
-        // Initialize sprite and world dimensions
-        spriteWidth = img.getWidth();
-        spriteHeight = img.getHeight();
-        worldWidth = viewport.getWorldWidth();
-        worldHeight = viewport.getWorldHeight();
+        // Calculate world dimensions
+        int map_tile_width = tile_map.getProperties().get("width", Integer.class);
+        int tile_width = tile_map.getProperties().get("tilewidth", Integer.class);
+        world_width = map_tile_width * tile_width;
+        world_height = world_width / target_aspect_ratio;
 
-        camera.position.set(worldWidth / 2f, worldHeight / 2f, 0);
+        // Set the viewport to use the whole screen with the desired aspect ratio
+        viewport = new FitViewport(world_width, world_height, camera);
+
+        // Center the camera on the tile map
+        camera.position.set(world_width / 2f, world_height / 2f, 0);
         camera.update();
+
+        // Adjust the viewport if needed to ensure the tile map fills the entire screen (for tile maps that are not 16:9)
+        float aspect_ratio = (float) Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
+        if (aspect_ratio > target_aspect_ratio) {
+            float new_world_height = world_width * aspect_ratio;
+            float y_offset = (new_world_height - world_height) / 2f;
+            viewport.setWorldSize(world_width, new_world_height);
+            camera.position.add(0, y_offset, 0);
+            camera.update();
+        }
     }
 
     /**
      * Called when screen should render itself.
-     * Handles input and updates the camera before rendering the sprite.
+     * Handles input, updates the camera, renders the tile map, and renders the player sprite on top.
      *
      * @param delta time in seconds since the last render.
      */
@@ -65,15 +85,21 @@ public class PlayScreen implements Screen {
 
         // Update camera and viewport
         camera.update();
-        batch.setProjectionMatrix(camera.combined);
+        map_renderer.setView(camera);
 
         // Clear the screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        batch.begin();
-        batch.draw(img, x, y); // Draw sprite in updated position
-        batch.end();
+        map_renderer.render(); // Render tile map
+
+        // Define player sprite dimensions
+        player_size = 24f;
+
+        // Render player sprite
+        map_renderer.getBatch().begin();
+        map_renderer.getBatch().draw(player_sprite, x, y, player_size, player_size); // Draw sprite in updated position with specified dimensions
+        map_renderer.getBatch().end();
     }
 
     /** Called when the window is resized.
@@ -85,18 +111,6 @@ public class PlayScreen implements Screen {
     public void resize(int width, int height) {
         // Update viewport when the window is resized
         viewport.update(width, height);
-
-        // Update world dimensions
-        worldWidth = viewport.getWorldWidth();
-        worldHeight = viewport.getWorldHeight();
-
-        // Ensure sprite stays within the new window boundaries
-        if (x + spriteWidth > worldWidth) {
-            x = worldWidth - spriteWidth;
-        }
-        if (y + spriteHeight > worldHeight) {
-            y = worldHeight - spriteHeight;
-        }
     }
 
     /**
@@ -104,36 +118,53 @@ public class PlayScreen implements Screen {
      * Checks boundaries to prevent the sprite from moving outside the game window.
      */
     private void handleInput() {
-        float speed = 200f; // Sprite speed
+        float speed = 200f; // Player sprite speed
 
-        // Move sprite based on key input
+        float delta_X = 0;
+        float delta_Y = 0;
+
+        // Move player sprite based on key input
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            if (y + spriteHeight + Gdx.graphics.getDeltaTime() * speed <= worldHeight) { // Check move is within boundary
-                y += Gdx.graphics.getDeltaTime() * speed;
-            } else {
-                y = worldHeight - spriteHeight; // set position to boundary
-            }
+            delta_Y += 1;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            if (y - Gdx.graphics.getDeltaTime() * speed >= 0) {
-                y -= Gdx.graphics.getDeltaTime() * speed;
-            } else {
-                y = 0;
-            }
+            delta_Y -= 1;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            if (x - Gdx.graphics.getDeltaTime() * speed >= 0) {
-                x -= Gdx.graphics.getDeltaTime() * speed;
-            } else {
-                x = 0;
-            }
+            delta_X -= 1;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            if (x + spriteWidth + Gdx.graphics.getDeltaTime() * speed <= worldWidth) {
-                x += Gdx.graphics.getDeltaTime() * speed;
-            } else {
-                x = worldWidth - spriteWidth;
-            }
+            delta_X += 1;
+        }
+
+        // Normalise movement vector for diagonal movement
+        if (delta_X != 0 && delta_Y != 0) {
+            float length = (float) Math.sqrt(delta_X * delta_X + delta_Y * delta_Y);
+            delta_X /= length;
+            delta_Y /= length;
+        }
+
+        // Update player position
+        x += delta_X * Gdx.graphics.getDeltaTime() * speed;
+        y += delta_Y * Gdx.graphics.getDeltaTime() * speed;
+
+        // Ensure player stays within the game window boundaries
+        x = MathUtils.clamp(x, 0, world_width - player_size);
+        y = MathUtils.clamp(y, 0, world_height - player_size);
+
+        // Toggle fullscreen when F11 is pressed
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F11)) {
+            toggleFullscreen();
+        }
+    }
+
+    private void toggleFullscreen() {
+        is_fullscreen = !is_fullscreen;
+
+        if (is_fullscreen) {
+            Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+        } else {
+            Gdx.graphics.setWindowedMode((int) world_width, (int) world_height);
         }
     }
 
@@ -152,7 +183,8 @@ public class PlayScreen implements Screen {
     /** Called when the application is destroyed. Preceded by a call to {@link #pause()}. */
     @Override
     public void dispose() {
-        batch.dispose();
-        img.dispose();
+        tile_map.dispose();
+        map_renderer.dispose();
+        player_sprite.dispose();
     }
 }
