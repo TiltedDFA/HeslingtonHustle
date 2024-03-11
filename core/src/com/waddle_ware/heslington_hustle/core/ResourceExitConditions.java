@@ -11,7 +11,7 @@ public class ResourceExitConditions
         this.conditions = conditions;
     }
 
-    public ResourceTypes GetTypes() { return types;}
+    public ResourceTypes GetTypes() { return this.types;}
 
-    public ExitConditions GetConditions() { return conditions;}
+    public ExitConditions GetConditions() { return this.conditions;}
 }

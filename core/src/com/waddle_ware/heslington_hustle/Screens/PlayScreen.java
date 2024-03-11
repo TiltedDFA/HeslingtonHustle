@@ -12,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.waddle_ware.heslington_hustle.Avatar;
 
 /**
  * The PlayScreen class represents the games screen where the gameplay is.
@@ -23,11 +24,10 @@ public class PlayScreen implements Screen {
     private TiledMap tile_map;
     private OrthogonalTiledMapRenderer map_renderer;
     private boolean is_fullscreen = false;  // Track fullscreen state
-    private Texture player_sprite; // Player image
-    private float x, y; // Player position
+
+    private Avatar player;
     private float world_width;
     private float world_height;
-    private float player_size;
 
     /**
      * Called when this screen becomes the current screen.
@@ -42,10 +42,6 @@ public class PlayScreen implements Screen {
         tile_map = new TmxMapLoader().load("map.tmx"); // load tile map
         map_renderer = new OrthogonalTiledMapRenderer(tile_map);
 
-        player_sprite = new Texture("player.png"); // load player sprite
-        x = 0;
-        y = 0;
-
         // Set target aspect ratio for tile map
         float target_aspect_ratio = 16f / 9f;
 
@@ -55,6 +51,7 @@ public class PlayScreen implements Screen {
         world_width = map_tile_width * tile_width;
         world_height = world_width / target_aspect_ratio;
 
+        player = new Avatar(0, 0, world_height, world_width);
         // Set the viewport to use the whole screen with the desired aspect ratio
         viewport = new FitViewport(world_width, world_height, camera);
 
@@ -82,10 +79,12 @@ public class PlayScreen implements Screen {
     @Override
     public void render(float delta) {
         handleInput(); // Call method to handle inputs
+        player.handleInput();
 
         // Update camera and viewport
         camera.update();
         map_renderer.setView(camera);
+        player.update();
 
         // Clear the screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -93,12 +92,9 @@ public class PlayScreen implements Screen {
 
         map_renderer.render(); // Render tile map
 
-        // Define player sprite dimensions
-        player_size = 24f;
-
         // Render player sprite
         map_renderer.getBatch().begin();
-        map_renderer.getBatch().draw(player_sprite, x, y, player_size, player_size); // Draw sprite in updated position with specified dimensions
+        player.render(map_renderer);// Draw sprite in updated position with specified dimensions
         map_renderer.getBatch().end();
     }
 
@@ -118,40 +114,6 @@ public class PlayScreen implements Screen {
      * Checks boundaries to prevent the sprite from moving outside the game window.
      */
     private void handleInput() {
-        float speed = 200f; // Player sprite speed
-
-        float delta_X = 0;
-        float delta_Y = 0;
-
-        // Move player sprite based on key input
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            delta_Y += 1;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            delta_Y -= 1;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            delta_X -= 1;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            delta_X += 1;
-        }
-
-        // Normalise movement vector for diagonal movement
-        if (delta_X != 0 && delta_Y != 0) {
-            float length = (float) Math.sqrt(delta_X * delta_X + delta_Y * delta_Y);
-            delta_X /= length;
-            delta_Y /= length;
-        }
-
-        // Update player position
-        x += delta_X * Gdx.graphics.getDeltaTime() * speed;
-        y += delta_Y * Gdx.graphics.getDeltaTime() * speed;
-
-        // Ensure player stays within the game window boundaries
-        x = MathUtils.clamp(x, 0, world_width - player_size);
-        y = MathUtils.clamp(y, 0, world_height - player_size);
-
         // Toggle fullscreen when F11 is pressed
         if (Gdx.input.isKeyJustPressed(Input.Keys.F11)) {
             toggleFullscreen();
@@ -185,6 +147,6 @@ public class PlayScreen implements Screen {
     public void dispose() {
         tile_map.dispose();
         map_renderer.dispose();
-        player_sprite.dispose();
+        player.dispose();
     }
 }

@@ -6,9 +6,9 @@ public class Energy
     /**
      * Static constants
      */
-    static final private int EnergyPerStudy = -2;
-    static final private int EnergyPerRecreational = -1;
-    static final private int EnergyPerFood = 1;
+    static final private int ENERGY_PER_STUDY = -2;
+    static final private int ENERGY_PER_RECREATIONAL = -1;
+    static final private int ENERGY_PER_FOOD = 1;
     /**
      * Member variables.
      */
@@ -56,13 +56,13 @@ public class Energy
         switch(type)
         {
             case Study:
-                cost_of_resource = EnergyPerStudy;
+                cost_of_resource = ENERGY_PER_STUDY;
                 break;
             case Recreation:
-                cost_of_resource = EnergyPerRecreational;
+                cost_of_resource = ENERGY_PER_RECREATIONAL;
                 break;
             case Food:
-                cost_of_resource = EnergyPerFood;
+                cost_of_resource = ENERGY_PER_FOOD;
                 break;
                 //This should never happen
             default:
@@ -82,13 +82,13 @@ public class Energy
         switch(type)
         {
             case Study:
-                this.current += EnergyPerStudy;
+                this.current += ENERGY_PER_STUDY;
                 return;
             case Recreation:
-                this.current += EnergyPerRecreational;
+                this.current += ENERGY_PER_RECREATIONAL;
                 return;
             case Food:
-                this.current += EnergyPerFood;
+                this.current += ENERGY_PER_FOOD;
         }
     }
 }

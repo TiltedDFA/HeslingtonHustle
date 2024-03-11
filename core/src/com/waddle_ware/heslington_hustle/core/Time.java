@@ -7,15 +7,9 @@ import java.time.Clock;
 //16hours
 public class Time implements ResourceBase
 {
-    /**
-     * These constants will be used in core to determine the cost
-     * of types of activities.
-     * Since they are static they will be accessed with 'Time.', therefore
-     * the Time part has been omitted from Time.
-     */
-    static final public int TimePerStudy = -120;
-    static final public int TimePerRecreational = -120;
-    static final public int TimePerFood = -60;
+    static final private int TIME_PER_STUDY = -120;
+    static final private int TIME_PER_RECREATIONAL = -120;
+    static final private int TIME_PER_FOOD = -60;
     /**
      * This private constant will be used to convert the current minutes
      * to an amount of intervals for updating the GUI layer
@@ -72,7 +66,7 @@ public class Time implements ResourceBase
     @Override
     public ExitConditions isOk(int amount)
     {
-        if(amount < 0) return ExitConditions.TooLow;
+        if(amount <= 0) return ExitConditions.TooLow;
         return ExitConditions.IsOk;
     }
     @Override
@@ -82,13 +76,13 @@ public class Time implements ResourceBase
         switch(type)
         {
             case Study:
-                cost_of_resource = TimePerStudy;
+                cost_of_resource = TIME_PER_STUDY;
                 break;
             case Recreation:
-                cost_of_resource = TimePerRecreational;
+                cost_of_resource = TIME_PER_RECREATIONAL;
                 break;
             case Food:
-                cost_of_resource = TimePerFood;
+                cost_of_resource = TIME_PER_FOOD;
                 break;
             //This should never happen
             default:
@@ -110,13 +104,13 @@ public class Time implements ResourceBase
         switch(type)
         {
             case Study:
-                this.minutes_remaining += TimePerStudy;
+                this.minutes_remaining += TIME_PER_STUDY;
                 return;
             case Recreation:
-                this.minutes_remaining += TimePerRecreational;
+                this.minutes_remaining += TIME_PER_RECREATIONAL;
                 return;
             case Food:
-                this.minutes_remaining += TimePerFood;
+                this.minutes_remaining += TIME_PER_FOOD;
         }
     }
 }
