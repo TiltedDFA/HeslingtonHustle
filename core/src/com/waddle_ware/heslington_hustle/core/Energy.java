@@ -1,7 +1,7 @@
 package com.waddle_ware.heslington_hustle.core;
 
 
-public class Energy
+public class Energy implements ResourceBase
 {
     /**
      * Static constants
@@ -15,7 +15,7 @@ public class Energy
     final private int limit;
     private int current;
     /**
-     * Initialises the energy class with a default limit of 4 energy
+     * Initialises the energy class with the energy limit specified
      *
      *  @param limit The upper limit of the energy that the player can have at any given time
      */
@@ -32,24 +32,19 @@ public class Energy
     {
         return this.current;
     }
-    /**
-     * Resets the energy to the limit.
-     * Intended to be used upon the day resetting.
-     */
+    @Override
     public void reset()
     {
         this.current = this.limit;
     }
-    private ExitConditions isOk(int amount)
+    @Override
+    public ExitConditions isOk(int amount)
     {
         if(amount < 0) return ExitConditions.TooLow;
         if(amount > this.limit) return ExitConditions.TooHigh;
         return ExitConditions.IsOk;
     }
-    /**
-     * Attempts to add specified amount of energy to the current amount.
-     *
-     */
+    @Override
     public ResourceExitConditions tryActivityType(ActivityType type)
     {
         int cost_of_resource;
@@ -73,11 +68,8 @@ public class Energy
         final ExitConditions condition = isOk(potential_state);
         return new ResourceExitConditions(ResourceTypes.Energy, condition);
     }
-    /**
-     * An unchecked command that will do the activity
-     * @param type the type of activity
-     */
-    void doActivity(ActivityType type)
+    @Override
+    public void doActivity(ActivityType type)
     {
         switch(type)
         {

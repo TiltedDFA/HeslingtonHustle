@@ -1,5 +1,11 @@
 package com.waddle_ware.heslington_hustle.core;
 
+/**
+ * This class combines exit conditions and resource
+ * types to be able to returned from the core to
+ * the gui, so it can provide a visual queue indicating
+ * why an attempted interaction failed if it did.
+ */
 public class ResourceExitConditions
 {
     private final ResourceTypes types;

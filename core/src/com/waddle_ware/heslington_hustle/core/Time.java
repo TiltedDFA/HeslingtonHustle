@@ -14,7 +14,7 @@ public class Time implements ResourceBase
      * This private constant will be used to convert the current minutes
      * to an amount of intervals for updating the GUI layer
      */
-    static final private int MinsInInterval = 15;
+    static final private int MINS_IN_INTERVAL = 15;
     /**
      * This constant variable will be used to specify the amount
      * of time that needs to pass irl for 1 unit of time to decrement
@@ -43,32 +43,43 @@ public class Time implements ResourceBase
         this.minutes_remaining -= this.game_minutes_per_decrement;
         this.end_point += this.timer.millis() + this.milliseconds_irl_to_decrement;
     }
-    // This is going to convert the minute representation to bars
-
     @Override
     public void reset()
     {
         this.minutes_remaining = 60 * 16;
     }
 
+    /**
+     * This function is intended to be used by the HUD to
+     * get the number of bars to display in the progress bar
+     * @return The number of minutes remaining / MINS_IN_INTERVAL
+     */
     public int getIntervalsRemaining()
     {
         if(this.minutes_remaining < 1) return 0;
 
-        return (int) Math.ceil((double) this.minutes_remaining / MinsInInterval);
+        return (int) Math.ceil((double) this.minutes_remaining / MINS_IN_INTERVAL);
     }
+
+    /**
+     * Used by an internal core function to check whether
+     * the game has ended
+     * @return the number of game minutes remaining
+     */
     public int getMinutesRemaining()
     {
         if(this.minutes_remaining < 1) return 0;
 
         return this.minutes_remaining;
     }
+
     @Override
     public ExitConditions isOk(int amount)
     {
         if(amount <= 0) return ExitConditions.TooLow;
         return ExitConditions.IsOk;
     }
+
     @Override
     public ResourceExitConditions tryActivityType(ActivityType type)
     {
@@ -94,10 +105,6 @@ public class Time implements ResourceBase
         return new ResourceExitConditions(ResourceTypes.Time, condition);
     }
 
-    /**
-     * An unchecked command that will do the activity
-     * @param type the type of activity
-     */
     @Override
     public void doActivity(ActivityType type)
     {

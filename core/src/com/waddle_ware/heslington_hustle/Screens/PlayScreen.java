@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.waddle_ware.heslington_hustle.Avatar;
+import com.waddle_ware.heslington_hustle.core.Core;
 
 /**
  * The PlayScreen class represents the games screen where the gameplay is.

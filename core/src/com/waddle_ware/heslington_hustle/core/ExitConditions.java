@@ -2,7 +2,7 @@ package com.waddle_ware.heslington_hustle.core;
 
 /**
  * This is used by resources to determine what the condition of a request
- * to a resource is. Since the resources will have internal representation
+ * to a resource is. Since the resources will have internal representations
  * of the cost of types of activities and the quantity of the resources will
  * only be changed by a TryActivityType function that accepts activity types.
  * Therefore, the need to know whether the activity succeeded or if it failed
