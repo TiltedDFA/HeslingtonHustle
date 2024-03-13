@@ -85,7 +85,7 @@ public class PlayScreen implements Screen {
         // Update camera and viewport
         camera.update();
         map_renderer.setView(camera);
-        player.update();
+        player.update(tile_map);
 
         // Clear the screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
