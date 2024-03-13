@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.waddle_ware.heslington_hustle.Avatar;
+import com.waddle_ware.heslington_hustle.HUD;
 import com.waddle_ware.heslington_hustle.core.Core;
 
 /**
@@ -29,6 +30,9 @@ public class PlayScreen implements Screen {
     private Avatar player;
     private float world_width;
     private float world_height;
+    private HUD hud;
+
+    private Core core;
 
     /**
      * Called when this screen becomes the current screen.
@@ -38,7 +42,8 @@ public class PlayScreen implements Screen {
     public void show() {
         // Create camera and viewport
         camera = new OrthographicCamera();
-
+        hud = new HUD();
+        core = new Core();
         // Load tile Map
         tile_map = new TmxMapLoader().load("map.tmx"); // load tile map
         map_renderer = new OrthogonalTiledMapRenderer(tile_map);
@@ -85,6 +90,7 @@ public class PlayScreen implements Screen {
         // Update camera and viewport
         camera.update();
         map_renderer.setView(camera);
+        hud.update(core);
         player.update(tile_map);
 
         // Clear the screen
@@ -97,6 +103,7 @@ public class PlayScreen implements Screen {
         map_renderer.getBatch().begin();
         player.render(map_renderer);// Draw sprite in updated position with specified dimensions
         map_renderer.getBatch().end();
+        hud.render();
     }
 
     /** Called when the window is resized.
