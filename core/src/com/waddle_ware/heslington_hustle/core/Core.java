@@ -37,7 +37,7 @@ public class Core
      * needs updating is time (to see if enough irl time has passed
      * to decrease the remaining time).
      */
-    void update()
+    public void update()
     {
         this.time.update();
     }
@@ -52,7 +52,7 @@ public class Core
      * @return Resource exit condition. If it is successful, returns (Null, IsOk),
      * else it returns the ResourceType and the type of fault (too high / low).
      */
-    ResourceExitConditions interactedWith(ActivityType type)
+    public ResourceExitConditions interactedWith(ActivityType type)
     {
         //check if we can do activity
         final ResourceExitConditions energy = this.energy.tryActivityType(type);
@@ -159,5 +159,38 @@ public class Core
             score += this.study_count[i] * STUDY_SCORE_VALUE;
         }
         return score;
+    }
+
+    /**
+     * Returns the day. NOT zero indexed
+     * @return current day
+     */
+    public int getCurrentDay()
+    {
+        return this.day + 1;
+    }
+    public int getEnergyLimit()
+    {
+        return this.energy.getLimit();
+    }
+    public int getCurrentEnergy()
+    {
+        return this.energy.getCurrentEnergy();
+    }
+    public int getTimeLimit()
+    {
+        return Time.MINUTES_PER_DAY;
+    }
+    public int getTimeRemaining()
+    {
+        return this.time.getMinutesRemaining();
+    }
+    public int getTimesStudiedToday()
+    {
+        return study_count[this.day];
+    }
+    public int getTimesEatenToday()
+    {
+        return meal_count[this.day];
     }
 }

@@ -83,4 +83,8 @@ public class Energy implements ResourceBase
                 this.current += ENERGY_PER_FOOD;
         }
     }
+    public int getLimit()
+    {
+        return this.limit;
+    }
 }

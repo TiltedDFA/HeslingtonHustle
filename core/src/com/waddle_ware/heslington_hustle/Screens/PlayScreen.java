@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.waddle_ware.heslington_hustle.Avatar;
 import com.waddle_ware.heslington_hustle.HUD;
+import com.waddle_ware.heslington_hustle.core.ActivityType;
 import com.waddle_ware.heslington_hustle.core.Core;
 
 /**
@@ -42,7 +43,7 @@ public class PlayScreen implements Screen {
     public void show() {
         // Create camera and viewport
         camera = new OrthographicCamera();
-        hud = new HUD();
+
         core = new Core();
         // Load tile Map
         tile_map = new TmxMapLoader().load("map.tmx"); // load tile map
@@ -56,11 +57,11 @@ public class PlayScreen implements Screen {
         int tile_width = tile_map.getProperties().get("tilewidth", Integer.class);
         world_width = map_tile_width * tile_width;
         world_height = world_width / target_aspect_ratio;
-
+        System.out.printf("width: %f, height: %f", world_width,world_height);
         player = new Avatar(0, 0, world_height, world_width);
         // Set the viewport to use the whole screen with the desired aspect ratio
         viewport = new FitViewport(world_width, world_height, camera);
-
+        hud = new HUD(viewport, core);
         // Center the camera on the tile map
         camera.position.set(world_width / 2f, world_height / 2f, 0);
         camera.update();
@@ -92,6 +93,7 @@ public class PlayScreen implements Screen {
         map_renderer.setView(camera);
         hud.update(core);
         player.update(tile_map);
+        core.update();
 
         // Clear the screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -102,8 +104,8 @@ public class PlayScreen implements Screen {
         // Render player sprite
         map_renderer.getBatch().begin();
         player.render(map_renderer);// Draw sprite in updated position with specified dimensions
+        hud.render(map_renderer.getBatch());
         map_renderer.getBatch().end();
-        hud.render();
     }
 
     /** Called when the window is resized.
@@ -122,6 +124,11 @@ public class PlayScreen implements Screen {
      * Checks boundaries to prevent the sprite from moving outside the game window.
      */
     private void handleInput() {
+        //Test for core
+        if(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.O))
+        {
+            this.core.interactedWith(ActivityType.Study);
+        }
         // Toggle fullscreen when F11 is pressed
         if (Gdx.input.isKeyJustPressed(Input.Keys.F11)) {
             toggleFullscreen();

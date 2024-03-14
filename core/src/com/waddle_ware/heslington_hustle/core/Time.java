@@ -7,9 +7,10 @@ import java.time.Clock;
 //16hours
 public class Time implements ResourceBase
 {
-    static final private int TIME_PER_STUDY = -120;
+    static final private int TIME_PER_STUDY = -1;
     static final private int TIME_PER_RECREATIONAL = -120;
     static final private int TIME_PER_FOOD = -60;
+    static final public int MINUTES_PER_DAY = 16 * 60;
     /**
      * This private constant will be used to convert the current minutes
      * to an amount of intervals for updating the GUI layer
@@ -30,7 +31,7 @@ public class Time implements ResourceBase
 
     public Time(int mins_per_dec, int secs_to_dec)
     {
-        this.minutes_remaining = 60 * 16;
+        this.minutes_remaining = MINUTES_PER_DAY;
         this.game_minutes_per_decrement = mins_per_dec;
         this.milliseconds_irl_to_decrement = secs_to_dec * 1000;
         this.timer = Clock.systemUTC();
@@ -41,12 +42,12 @@ public class Time implements ResourceBase
     {
         if(this.end_point >= this.timer.millis()) return;
         this.minutes_remaining -= this.game_minutes_per_decrement;
-        this.end_point += this.timer.millis() + this.milliseconds_irl_to_decrement;
+        this.end_point = this.timer.millis() + this.milliseconds_irl_to_decrement;
     }
     @Override
     public void reset()
     {
-        this.minutes_remaining = 60 * 16;
+        this.minutes_remaining = MINUTES_PER_DAY;
     }
 
     /**
