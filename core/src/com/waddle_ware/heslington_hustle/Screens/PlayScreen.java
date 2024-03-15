@@ -61,7 +61,7 @@ public class PlayScreen implements Screen {
         player = new Avatar(0, 0, world_height, world_width);
         // Set the viewport to use the whole screen with the desired aspect ratio
         viewport = new FitViewport(world_width, world_height, camera);
-        hud = new HUD(viewport, core);
+        hud = new HUD(core);
         // Center the camera on the tile map
         camera.position.set(world_width / 2f, world_height / 2f, 0);
         camera.update();

@@ -152,7 +152,7 @@ public class Core
         if(!hasEnded())
             throw new RuntimeException("generateScore has been called before the game has ended");
         int score = 0;
-        for (int i = 0; i < 7; i++) 
+        for (int i = 0; i < 7; ++i)
         {
             score += this.meal_count[i]  * MEAL_SCORE_VALUE;
             score += this.relax_count[i] * RELAX_SCORE_VALUE;

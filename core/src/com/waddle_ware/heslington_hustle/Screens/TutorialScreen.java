@@ -1,5 +1,4 @@
 package com.waddle_ware.heslington_hustle.Screens;
-import com.waddle_ware.heslington_hustle.HeslingtonHustle;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -8,29 +7,31 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.waddle_ware.heslington_hustle.HeslingtonHustle;
 
-/**
- * The MenuScreen class represents the screen where the game menu is displayed.
- * It implements the Screen interface and handles user input for menu navigation.
- */
-public class MenuScreen implements Screen {
+public class TutorialScreen implements Screen
+{
     private final HeslingtonHustle game;
     private final Stage stage;
-
+    /**
+     * This is to be used to get back to the screen that called
+     * the tutorial screen as it should be able to be called
+     * from either play screen or menu screen
+     */
+    private Screen previous_screen;
     /**
      * Constructs a new MenuScreen.
      *
      * @param game The game instance.
      */
-    public MenuScreen(HeslingtonHustle game) {
+    public TutorialScreen(HeslingtonHustle game, Screen previous_screen) {
+        this.previous_screen = previous_screen;
         this.game = game;
         stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         Gdx.input.setInputProcessor(stage);
-
         initialiseMenu(); // Add menu elements
     }
 
@@ -38,42 +39,23 @@ public class MenuScreen implements Screen {
      * Initialises menu elements, such as buttons and their listeners.
      */
     private void initialiseMenu() {
-        VerticalGroup menu_group = new VerticalGroup();
-        menu_group.setFillParent(true);
-        menu_group.center(); // centre align vertically
-        stage.addActor(menu_group);
-        Screen previous = this;
+        VerticalGroup tutorial_group = new VerticalGroup();
+        tutorial_group.setFillParent(true);
+        tutorial_group.center(); // centre align vertically
+        stage.addActor(tutorial_group);
 
-        TextButtonStyle button_style = new TextButtonStyle();
+        TextButton.TextButtonStyle button_style = new TextButton.TextButtonStyle();
         button_style.font = new BitmapFont(); // default font
 
         // Play button
-        TextButton playButton = new TextButton("Play", button_style);
-        playButton.addListener(new ClickListener() {
+        TextButton backButton = new TextButton("back", button_style);
+        backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new PlayScreen());
+                game.setScreen(previous_screen);
             }
         });
-        TextButton tutorialButton = new TextButton("Tutorial", button_style);
-        tutorialButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new TutorialScreen(game, previous));
-            }
-        });
-        // Exit button
-        TextButton exitButton = new TextButton("Exit", button_style);
-        exitButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.exit();
-            }
-        });
-
-        menu_group.addActor(playButton);
-        menu_group.addActor(tutorialButton);
-        menu_group.addActor(exitButton);
+        tutorial_group.addActor(backButton);
     }
 
 
