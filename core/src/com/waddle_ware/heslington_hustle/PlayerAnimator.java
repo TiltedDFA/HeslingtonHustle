@@ -1,64 +1,76 @@
 package com.waddle_ware.heslington_hustle;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 public class PlayerAnimator {
     //constant rows and columns of the sprite sheet
-    private static final int FRAME_COLS = 1, FRAME_ROWS = 3;
     static Animation<TextureRegion> walk_animation;
     static Texture walk_down_sheet;
     static float state_time = 0f; //tracks elapsed time of animation
 
     public static Animation<TextureRegion> createAnimation(Vector2 velocity) {
         String sprite_sheet = getSpriteSheet(velocity);
+        System.out.println(sprite_sheet);
+        int frame_rows;
+        int frame_cols = 1;
+
+        if (sprite_sheet.equals("player.png")) {
+            frame_rows = 1;
+        }
+        else {
+            frame_rows = 3;
+        }
 
         //load sprite sheet as a texture
         walk_down_sheet = new Texture(Gdx.files.internal(sprite_sheet));
 
         //create 2d array of TextureRegions to match sprite sheet
         TextureRegion[][] tmp = TextureRegion.split(walk_down_sheet,
-                walk_down_sheet.getWidth() / FRAME_COLS,
-                walk_down_sheet.getHeight() / FRAME_ROWS);
+                walk_down_sheet.getWidth() / frame_cols,
+                walk_down_sheet.getHeight() / frame_rows);
 
         //convert to 1d array with animation frames in the correct order
-        TextureRegion[] walkDownFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
+        TextureRegion[] walkDownFrames = new TextureRegion[frame_cols * frame_rows];
         int index = 0;
-        for (int i = 0; i < FRAME_ROWS; i++) {
-            for (int j = 0; j < FRAME_COLS; j++) {
+        for (int i = 0; i < frame_rows; i++) {
+            for (int j = 0; j < frame_cols; j++) {
                 walkDownFrames[index] = tmp[i][j];
                 index += 1;
             }
         }
         //initialize animation with the frame interval (time spent on each animation frame)
         //and the array of frames.
-        walk_animation = new Animation<TextureRegion>(0.1f, walkDownFrames);
+        walk_animation = new Animation<>(0.1f, walkDownFrames);
 
         return walk_animation;
     }
     private static String getSpriteSheet(Vector2 velocity) {
-        String sprite_sheet;
-        if (Math.abs(velocity.x) > Math.abs(velocity.y)) {
+        //finds the direction the sprite is moving in so correct sprite sheet is used.
+
+        if (Math.round(velocity.x) == 0 && Math.round(velocity.y) == 0) {
+            //check if player is standing still
+            return "player.png";
+        }
+        else if (Math.abs(velocity.x) > Math.abs(velocity.y)) {
             if (velocity.x < 0) {
-                sprite_sheet = "move_left_spritesheet.png";
+                return "move_left_sprite_sheet.png";
             }
             else {
-                sprite_sheet = "move_right_spritesheet.png";
+                return "move_right_sprite_sheet.png";
             }
         }
-        else {
+        else if (Math.abs(velocity.x) < Math.abs(velocity.y)) {
             if (velocity.y < 0) {
-                sprite_sheet = "move_down_spritesheet.png";
+                return "move_down_sprite_sheet.png";
             }
             else {
-                sprite_sheet = "move_up_spritesheet.png";
+                return "move_up_sprite_sheet.png";
             }
         }
-        return sprite_sheet;
+        return "player.png";
     }
 }
