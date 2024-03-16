@@ -13,15 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.waddle_ware.heslington_hustle.HeslingtonHustle;
 
-public class TutorialScreen implements Screen
-{
+public class TutorialScreen implements Screen {
     private final HeslingtonHustle game;
     private final Stage stage;
-    /**
-     * This is to be used to get back to the screen that called
-     * the tutorial screen as it should be able to be called
-     * from either play screen or menu screen
-     */
     private final ScreenId previous_screen;
     private final Texture tutorial_img;
     /**
@@ -33,18 +27,15 @@ public class TutorialScreen implements Screen
         this.previous_screen = previous_screen;
         this.game = game;
         tutorial_img = new Texture("tutorial.png");
-        stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+        stage = new Stage(new FitViewport(1920, 1080)); // Set virtual screen size to 16:9 aspect ratio
         Gdx.input.setInputProcessor(stage);
         initialiseMenu(); // Add menu elements
     }
 
-    /**
-     * Initialises menu elements, such as buttons and their listeners.
-     */
     private void initialiseMenu() {
         VerticalGroup tutorial_group = new VerticalGroup();
         tutorial_group.setFillParent(true);
-        tutorial_group.center(); // centre align vertically
+        tutorial_group.left().bottom();
         stage.addActor(tutorial_group);
 
         TextButton.TextButtonStyle button_style = new TextButton.TextButtonStyle();
@@ -54,10 +45,8 @@ public class TutorialScreen implements Screen
         TextButton backButton = new TextButton("back", button_style);
         backButton.addListener(new ClickListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y)
-            {
-                switch (previous_screen)
-                {
+            public void clicked(InputEvent event, float x, float y) {
+                switch (previous_screen) {
                     case MenuScreen:
                         game.setScreen(new MenuScreen(game));
                         break;
@@ -67,12 +56,10 @@ public class TutorialScreen implements Screen
                     default:
                         game.setScreen(new MenuScreen(game));
                 }
-
             }
         });
         tutorial_group.addActor(backButton);
     }
-
 
     @Override
     public void show() {
@@ -86,7 +73,14 @@ public class TutorialScreen implements Screen
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
 
         stage.getBatch().begin();
-        stage.getBatch().draw(tutorial_img, 0, 0, Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+        float scaleX = stage.getViewport().getWorldWidth() / tutorial_img.getWidth();
+        float scaleY = stage.getViewport().getWorldHeight() / tutorial_img.getHeight();
+        float scale = Math.min(scaleX, scaleY);
+        float width = tutorial_img.getWidth() * scale;
+        float height = tutorial_img.getHeight() * scale;
+        float x = (stage.getViewport().getWorldWidth() - width) / 2;
+        float y = (stage.getViewport().getWorldHeight() - height) / 2;
+        stage.getBatch().draw(tutorial_img, x, y, width, height);
         stage.getBatch().end();
 
         stage.draw();
@@ -112,5 +106,6 @@ public class TutorialScreen implements Screen
     @Override
     public void dispose() {
         stage.dispose();
+        tutorial_img.dispose();
     }
 }
