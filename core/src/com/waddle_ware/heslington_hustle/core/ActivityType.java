@@ -7,5 +7,6 @@ public enum ActivityType
 {
     Study,
     Recreation,
-    Food
+    Food,
+    Sleep
 }

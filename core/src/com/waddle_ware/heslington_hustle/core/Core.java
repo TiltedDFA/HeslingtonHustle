@@ -41,7 +41,6 @@ public class Core
     {
         this.time.update();
     }
-
     /**
      * This function is the main way for the GUI to interact and manipulate
      * the game state.
@@ -54,6 +53,11 @@ public class Core
      */
     public ResourceExitConditions interactedWith(ActivityType type)
     {
+        if(type == ActivityType.Sleep)
+        {
+            incrementDay();
+            return new ResourceExitConditions(null, ExitConditions.IsOk);
+        }
         //check if we can do activity
         final ResourceExitConditions energy = this.energy.tryActivityType(type);
         final ResourceExitConditions time = this.time.tryActivityType(type);

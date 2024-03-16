@@ -21,7 +21,7 @@ public class TutorialScreen implements Screen
      * the tutorial screen as it should be able to be called
      * from either play screen or menu screen
      */
-    private Screen previous_screen;
+    private final Screen previous_screen;
     /**
      * Constructs a new MenuScreen.
      *
