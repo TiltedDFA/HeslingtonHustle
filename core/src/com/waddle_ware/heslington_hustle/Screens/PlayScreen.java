@@ -135,9 +135,21 @@ public class PlayScreen implements Screen {
      */
     private void handleInput() {
         //Test for core
-        if(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.O))
+        if(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.S))
         {
             this.core.interactedWith(ActivityType.Study);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.F))
+        {
+            this.core.interactedWith(ActivityType.Food);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.L))
+        {
+            this.core.interactedWith(ActivityType.Sleep);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.R))
+        {
+            this.core.interactedWith(ActivityType.Recreation);
         }
         // Toggle fullscreen when F11 is pressed
         if (Gdx.input.isKeyJustPressed(Input.Keys.F11)) {

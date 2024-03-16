@@ -86,7 +86,7 @@ public class TutorialScreen implements Screen
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
 
         stage.getBatch().begin();
-        stage.getBatch().draw(tutorial_img, 0, 0, Gdx.graphics.getHeight(),Gdx.graphics.getHeight());
+        stage.getBatch().draw(tutorial_img, 0, 0, Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         stage.getBatch().end();
 
         stage.draw();
