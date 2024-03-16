@@ -42,7 +42,6 @@ public class MenuScreen implements Screen {
         menu_group.setFillParent(true);
         menu_group.center(); // centre align vertically
         stage.addActor(menu_group);
-        Screen previous = this;
 
         TextButtonStyle button_style = new TextButtonStyle();
         button_style.font = new BitmapFont(); // default font
@@ -59,7 +58,7 @@ public class MenuScreen implements Screen {
         tutorialButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new TutorialScreen(game, previous));
+                game.setScreen(new TutorialScreen(game, ScreenId.MenuScreen));
             }
         });
         // Exit button

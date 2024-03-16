@@ -3,6 +3,7 @@ package com.waddle_ware.heslington_hustle.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -21,15 +22,17 @@ public class TutorialScreen implements Screen
      * the tutorial screen as it should be able to be called
      * from either play screen or menu screen
      */
-    private final Screen previous_screen;
+    private final ScreenId previous_screen;
+    private final Texture tutorial_img;
     /**
      * Constructs a new MenuScreen.
      *
      * @param game The game instance.
      */
-    public TutorialScreen(HeslingtonHustle game, Screen previous_screen) {
+    public TutorialScreen(HeslingtonHustle game, ScreenId previous_screen) {
         this.previous_screen = previous_screen;
         this.game = game;
+        tutorial_img = new Texture("tutorial.png");
         stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         Gdx.input.setInputProcessor(stage);
         initialiseMenu(); // Add menu elements
@@ -51,8 +54,20 @@ public class TutorialScreen implements Screen
         TextButton backButton = new TextButton("back", button_style);
         backButton.addListener(new ClickListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(previous_screen);
+            public void clicked(InputEvent event, float x, float y)
+            {
+                switch (previous_screen)
+                {
+                    case MenuScreen:
+                        game.setScreen(new MenuScreen(game));
+                        break;
+                    case PlayScreen:
+                        game.setScreen(new PlayScreen());
+                        break;
+                    default:
+                        game.setScreen(new MenuScreen(game));
+                }
+
             }
         });
         tutorial_group.addActor(backButton);
@@ -69,6 +84,11 @@ public class TutorialScreen implements Screen
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+
+        stage.getBatch().begin();
+        stage.getBatch().draw(tutorial_img, 0, 0, Gdx.graphics.getHeight(),Gdx.graphics.getHeight());
+        stage.getBatch().end();
+
         stage.draw();
     }
 
