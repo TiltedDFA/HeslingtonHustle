@@ -16,8 +16,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 
 import static com.waddle_ware.heslington_hustle.PlayerAnimator.state_time;
 
-public class Avatar
-{
+public class Avatar {
     private final Texture player_sprite; // Player image
     private final float player_size;
     private float player_x, player_y;
@@ -29,8 +28,7 @@ public class Avatar
     private final static float FRICTION = 0.8f;
 
     private final static float MAX_VELOCITY = 200f;
-    public Avatar(float plyr_x, float plyr_y, float world_height, float world_width)
-    {
+    public Avatar(float plyr_x, float plyr_y, float world_height, float world_width) {
         this.player_x = plyr_x;
         this.player_y = plyr_y;
         this.velocity = new Vector2(0,0);
@@ -41,26 +39,47 @@ public class Avatar
     }
     public void update(TiledMap tile_map)
     {
+        float oldX = this.player_x;
+        float oldY = this.player_y;
+
         this.velocity.clamp(0, MAX_VELOCITY);
         movePlayer(this.velocity.x * Gdx.graphics.getDeltaTime(), this.velocity.y * Gdx.graphics.getDeltaTime());
-        if(isTilesBlocked(tile_map))
+
+        if(isTilesBlocked(tile_map, this.player_x, this.player_y, this.player_size))
         {
-            onCollision();
+            onCollision(tile_map, oldX, oldY);
         }
     }
-    public void onCollision()
-    {
-        movePlayer(-this.velocity.x * Gdx.graphics.getDeltaTime(), -this.velocity.y * Gdx.graphics.getDeltaTime());
-        this.velocity.x = 0;
-        this.velocity.y = 0;
+
+    public void onCollision(TiledMap tile_map, float oldX, float oldY) {
+        float newX = this.player_x;
+        float newY = this.player_y;
+
+        // Check if the player is stuck horizontally
+        if (isTilesBlocked(tile_map, newX, oldY, this.player_size)) {
+            newX = oldX;
+            this.velocity.x = 0; // Reset horizontal velocity
+        }
+
+        // Check if the player is stuck vertically
+        if (isTilesBlocked(tile_map, oldX, newY, this.player_size)) {
+            newY = oldY;
+            this.velocity.y = 0; // Reset vertical velocity
+        }
+
+        // Update player position
+        this.player_x = newX;
+        this.player_y = newY;
     }
-    private boolean isTilesBlocked(TiledMap tile_map)
-    {
-        return  isTileBlocked(tile_map, this.player_x, this.player_y) ||
-                isTileBlocked(tile_map, this.player_x + this.player_size, this.player_y) ||
-                isTileBlocked(tile_map, this.player_x, this.player_y + this.player_size) ||
-                isTileBlocked(tile_map, this.player_x+ this.player_size, this.player_y + this.player_size);
+
+
+    private boolean isTilesBlocked(TiledMap tile_map, float x, float y, float size) {
+        return isTileBlocked(tile_map, x, y) ||
+                isTileBlocked(tile_map, x + size, y) ||
+                isTileBlocked(tile_map, x, y + size) ||
+                isTileBlocked(tile_map, x + size, y + size);
     }
+
     private boolean isTileBlocked(TiledMap tile_map, float x, float y) {
         MapLayers layers = tile_map.getLayers();
 
@@ -82,8 +101,7 @@ public class Avatar
 
         return false; // No blocked tile found in any layer
     }
-    private void movePlayer(float delta_x, float delta_y)
-    {
+    private void movePlayer(float delta_x, float delta_y) {
         this.player_x += delta_x;
         this.player_y += delta_y;
         this.player_x = MathUtils.clamp(this.player_x, 0, this.world_width - this.player_size);
@@ -96,8 +114,7 @@ public class Avatar
 
         renderer.getBatch().draw(current_frame, player_x, player_y, player_size, player_size);
     }
-    public void handleInput()
-    {
+    public void handleInput() {
         boolean x_keys_pressed = false, y_keys_pressed = false;
         // Move player sprite based on key input
         if (Gdx.input.isKeyPressed(Input.Keys.W)) { velocity.y += ACCELERATION; y_keys_pressed = true;}
@@ -120,8 +137,7 @@ public class Avatar
         return player_y;
     }
 
-    public void dispose()
-    {
+    public void dispose() {
         this.player_sprite.dispose();
     }
 }
