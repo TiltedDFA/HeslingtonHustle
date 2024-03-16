@@ -89,9 +89,8 @@ public class Avatar
         this.player_x = MathUtils.clamp(this.player_x, 0, this.world_width - this.player_size);
         this.player_y = MathUtils.clamp(this.player_y, 0, this.world_height - this.player_size);
     }
-    public void render(OrthogonalTiledMapRenderer renderer)
-    {
-        Animation<TextureRegion> animation = PlayerAnimator.createAnimation();
+    public void render(OrthogonalTiledMapRenderer renderer) {
+        Animation<TextureRegion> animation = PlayerAnimator.createAnimation(velocity);
         state_time += Gdx.graphics.getDeltaTime();
         TextureRegion current_frame = animation.getKeyFrame(state_time, true);
 
