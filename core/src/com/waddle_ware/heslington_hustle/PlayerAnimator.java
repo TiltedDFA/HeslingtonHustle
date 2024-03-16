@@ -10,29 +10,13 @@ import com.badlogic.gdx.math.Vector2;
 
 public class PlayerAnimator {
     //constant rows and columns of the sprite sheet
-    private static final int FRAME_COLS = 1, FRAME_ROWS = 2;
+    private static final int FRAME_COLS = 1, FRAME_ROWS = 3;
     static Animation<TextureRegion> walk_animation;
     static Texture walk_down_sheet;
     static float state_time = 0f; //tracks elapsed time of animation
 
     public static Animation<TextureRegion> createAnimation(Vector2 velocity) {
-        String sprite_sheet = null;
-        if (Math.abs(velocity.x) > Math.abs(velocity.y)) {
-            if (velocity.x < 0) {
-                sprite_sheet = "move_left_spritesheet.png";
-            }
-            else {
-                sprite_sheet = "move_right_spritesheet.png";
-            }
-        }
-        else {
-            if (velocity.y < 0) {
-                sprite_sheet = "move_down_spritesheet.png";
-            }
-            else {
-                sprite_sheet = "move_up_spritesheet.png";
-            }
-        }
+        String sprite_sheet = getSpriteSheet(velocity);
 
         //load sprite sheet as a texture
         walk_down_sheet = new Texture(Gdx.files.internal(sprite_sheet));
@@ -56,5 +40,25 @@ public class PlayerAnimator {
         walk_animation = new Animation<TextureRegion>(0.1f, walkDownFrames);
 
         return walk_animation;
+    }
+    private static String getSpriteSheet(Vector2 velocity) {
+        String sprite_sheet;
+        if (Math.abs(velocity.x) > Math.abs(velocity.y)) {
+            if (velocity.x < 0) {
+                sprite_sheet = "move_left_spritesheet.png";
+            }
+            else {
+                sprite_sheet = "move_right_spritesheet.png";
+            }
+        }
+        else {
+            if (velocity.y < 0) {
+                sprite_sheet = "move_down_spritesheet.png";
+            }
+            else {
+                sprite_sheet = "move_up_spritesheet.png";
+            }
+        }
+        return sprite_sheet;
     }
 }
