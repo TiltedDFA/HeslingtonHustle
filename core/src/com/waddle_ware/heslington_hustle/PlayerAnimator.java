@@ -14,7 +14,7 @@ public class PlayerAnimator {
 
     public static Animation<TextureRegion> createAnimation(Vector2 velocity) {
         String sprite_sheet = getSpriteSheet(velocity);
-        System.out.println(sprite_sheet);
+//        System.out.println(sprite_sheet);
         int frame_rows;
         int frame_cols = 1;
 

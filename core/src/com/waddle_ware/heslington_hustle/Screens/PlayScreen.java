@@ -12,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.waddle_ware.heslington_hustle.ActivityLocation;
 import com.waddle_ware.heslington_hustle.Avatar;
 import com.waddle_ware.heslington_hustle.HUD;
 import com.waddle_ware.heslington_hustle.core.ActivityType;
@@ -34,6 +35,13 @@ public class PlayScreen implements Screen {
     private HUD hud;
 
     private Core core;
+
+    // Define activity locations
+    private final ActivityLocation studyLocation = new ActivityLocation(130, 24, 20, "Study"); // Bottom left building
+    private final ActivityLocation recreationLocation = new ActivityLocation(495, 144, 20, "Recreation"); // Ducks at pond
+    private final ActivityLocation foodLocation = new ActivityLocation(570, 264, 20, "Food"); // Top right building
+    private final ActivityLocation sleepLocation = new ActivityLocation(250, 264, 20, "Sleep"); // Top left building
+
 
     /**
      * Called when this screen becomes the current screen.
@@ -106,6 +114,8 @@ public class PlayScreen implements Screen {
         player.render(map_renderer);// Draw sprite in updated position with specified dimensions
         hud.render(map_renderer.getBatch());
         map_renderer.getBatch().end();
+
+        System.out.println("Player's current coordinates: X=" + player.getPlayerX() + ", Y=" + player.getPlayerY());
     }
 
     /** Called when the window is resized.
@@ -133,6 +143,22 @@ public class PlayScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F11)) {
             toggleFullscreen();
         }
+        // Interact when "E" is pressed
+        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            float playerX = player.getPlayerX();
+            float playerY = player.getPlayerY();
+
+            // Check for interaction with each activity location
+            if (isPlayerWithinInteractionArea(playerX, playerY, studyLocation)) {
+                core.interactedWith(ActivityType.Study);
+            } else if (isPlayerWithinInteractionArea(playerX, playerY, recreationLocation)) {
+                core.interactedWith(ActivityType.Recreation);
+            } else if (isPlayerWithinInteractionArea(playerX, playerY, foodLocation)) {
+                core.interactedWith(ActivityType.Food);
+            } else if (isPlayerWithinInteractionArea(playerX, playerY, sleepLocation)) {
+                core.interactedWith(ActivityType.Sleep);
+            }
+        }
     }
 
     private void toggleFullscreen() {
@@ -143,6 +169,12 @@ public class PlayScreen implements Screen {
         } else {
             Gdx.graphics.setWindowedMode((int) world_width, (int) world_height);
         }
+    }
+
+    private boolean isPlayerWithinInteractionArea(float playerX, float playerY, ActivityLocation location) {
+        float distanceSquared = (playerX - location.getX()) * (playerX - location.getX())
+                + (playerY - location.getY()) * (playerY - location.getY());
+        return distanceSquared <= location.getRadius() * location.getRadius();
     }
 
     @Override

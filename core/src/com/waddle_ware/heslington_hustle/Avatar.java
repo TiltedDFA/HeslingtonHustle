@@ -111,6 +111,15 @@ public class Avatar
         velocity.x = MathUtils.clamp(velocity.x, -MAX_VELOCITY, MAX_VELOCITY);
         velocity.y = MathUtils.clamp(velocity.y, -MAX_VELOCITY, MAX_VELOCITY);
     }
+
+    public float getPlayerX() {
+        return player_x;
+    }
+
+    public float getPlayerY() {
+        return player_y;
+    }
+
     public void dispose()
     {
         this.player_sprite.dispose();
