@@ -3,6 +3,8 @@ package com.waddle_ware.heslington_hustle;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -11,6 +13,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
+
+import static com.waddle_ware.heslington_hustle.PlayerAnimator.state_time;
 
 public class Avatar
 {
@@ -87,7 +91,11 @@ public class Avatar
     }
     public void render(OrthogonalTiledMapRenderer renderer)
     {
-        renderer.getBatch().draw(player_sprite, player_x, player_y, player_size, player_size);
+        Animation<TextureRegion> animation = PlayerAnimator.createAnimation();
+        state_time += Gdx.graphics.getDeltaTime();
+        TextureRegion current_frame = animation.getKeyFrame(state_time, true);
+
+        renderer.getBatch().draw(current_frame, player_x, player_y, player_size, player_size);
     }
     public void handleInput()
     {
