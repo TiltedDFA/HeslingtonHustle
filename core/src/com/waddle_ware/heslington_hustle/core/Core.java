@@ -61,8 +61,8 @@ public class Core
         //check if we can do activity
         final ResourceExitConditions energy = this.energy.tryActivityType(type);
         final ResourceExitConditions time = this.time.tryActivityType(type);
-        if(energy.GetConditions() != ExitConditions.IsOk) return energy;
-        if(time.GetConditions() != ExitConditions.IsOk) return time;
+        if(energy.getConditions() != ExitConditions.IsOk) return energy;
+        if(time.getConditions() != ExitConditions.IsOk) return time;
 
         //do activity
         this.time.doActivity(type);
