@@ -11,7 +11,7 @@ import com.waddle_ware.heslington_hustle.core.Core;
 public class HUD
 {
 
-    private BitmapFont font;
+    private final BitmapFont font;
     CharSequence energy;
     CharSequence time;
     CharSequence studied;
@@ -57,8 +57,10 @@ public class HUD
         this.eaten = String.format("Eaten: %d", c.getTimesEatenToday());
         this.current_day = String.format("Day %d", c.getCurrentDay());
     }
+
     public void dispose()
     {
-
+        this.font.dispose();
+        this.font_gen.dispose();
     }
 }

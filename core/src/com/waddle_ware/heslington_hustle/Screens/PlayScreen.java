@@ -15,8 +15,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.waddle_ware.heslington_hustle.ActivityLocation;
 import com.waddle_ware.heslington_hustle.Avatar;
 import com.waddle_ware.heslington_hustle.HUD;
+import com.waddle_ware.heslington_hustle.HeslingtonHustle;
 import com.waddle_ware.heslington_hustle.core.ActivityType;
 import com.waddle_ware.heslington_hustle.core.Core;
+import com.waddle_ware.heslington_hustle.core.ExitConditions;
+import com.waddle_ware.heslington_hustle.core.ResourceExitConditions;
 
 /**
  * The PlayScreen class represents the games screen where the gameplay is.
@@ -33,6 +36,7 @@ public class PlayScreen implements Screen {
     private float world_width;
     private float world_height;
     private HUD hud;
+    private final HeslingtonHustle game;
 
     private Core core;
 
@@ -42,7 +46,10 @@ public class PlayScreen implements Screen {
     private final ActivityLocation food_location = new ActivityLocation(570, 264, 20, "Food"); // Top right building
     private final ActivityLocation sleep_location = new ActivityLocation(250, 264, 20, "Sleep"); // Top left building
 
-
+    public PlayScreen(HeslingtonHustle game)
+    {
+        this.game = game;
+    }
     /**
      * Called when this screen becomes the current screen.
      * Initialises camera, viewport, tile map, and player sprite.
@@ -93,6 +100,10 @@ public class PlayScreen implements Screen {
      */
     @Override
     public void render(float delta) {
+        if(core.hasEnded())
+        {
+            game.setScreen(new EndScreen(game, !core.hasPlayerFailed(), core.generateScore()));
+        }
         handleInput(); // Call method to handle inputs
         player.handleInput();
 
@@ -115,7 +126,7 @@ public class PlayScreen implements Screen {
         hud.render(map_renderer.getBatch());
         map_renderer.getBatch().end();
 
-        System.out.println("Player's current coordinates: X=" + player.getPlayerX() + ", Y=" + player.getPlayerY());
+//        System.out.println("Player's current coordinates: X=" + player.getPlayerX() + ", Y=" + player.getPlayerY());
     }
 
     /** Called when the window is resized.
@@ -143,7 +154,7 @@ public class PlayScreen implements Screen {
         {
             this.core.interactedWith(ActivityType.Food);
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.L))
+        if(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.E))
         {
             this.core.interactedWith(ActivityType.Sleep);
         }
@@ -151,25 +162,53 @@ public class PlayScreen implements Screen {
         {
             this.core.interactedWith(ActivityType.Recreation);
         }
+        if(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.W))
+        {
+            this.game.setScreen(new EndScreen(game, true, 2342));
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.L))
+        {
+            this.game.setScreen(new EndScreen(game, false, 7613));
+        }
         // Toggle fullscreen when F11 is pressed
         if (Gdx.input.isKeyJustPressed(Input.Keys.F11)) {
             toggleFullscreen();
         }
         // Interact when "E" is pressed
         if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-            float playerX = player.getPlayerX();
-            float playerY = player.getPlayerY();
+            handleInteraction();
+        }
 
-            // Check for interaction with each activity location
-            if (isPlayerWithinInteractionArea(playerX, playerY, study_location)) {
-                core.interactedWith(ActivityType.Study);
-            } else if (isPlayerWithinInteractionArea(playerX, playerY, recreation_location)) {
-                core.interactedWith(ActivityType.Recreation);
-            } else if (isPlayerWithinInteractionArea(playerX, playerY, food_location)) {
-                core.interactedWith(ActivityType.Food);
-            } else if (isPlayerWithinInteractionArea(playerX, playerY, sleep_location)) {
-                core.interactedWith(ActivityType.Sleep);
-            }
+
+    }
+    private void handleInteraction()
+    {
+        float playerX = player.getPlayerX();
+        float playerY = player.getPlayerY();
+        // Check for interaction with each activity location
+        if (isPlayerWithinInteractionArea(playerX, playerY, study_location))
+        {
+            final ResourceExitConditions exit_value = core.interactedWith(ActivityType.Study);
+            if(exit_value.GetConditions() == ExitConditions.IsOk) return;
+            //visually output why the interaction failed
+            //tmp:
+            System.out.printf("%s%s\n",exit_value.GetTypes().toString(),exit_value.GetConditions().toString());
+        }
+        if (isPlayerWithinInteractionArea(playerX, playerY, recreation_location))
+        {
+            final ResourceExitConditions exit_value = core.interactedWith(ActivityType.Recreation);
+            if(exit_value.GetConditions() == ExitConditions.IsOk) return;
+            System.out.printf("%s%s\n",exit_value.GetTypes().toString(),exit_value.GetConditions().toString());
+        }
+        //food and sleep should not be able to fail so they can remain unchecked
+        if (isPlayerWithinInteractionArea(playerX, playerY, food_location))
+        {
+            core.interactedWith(ActivityType.Food);
+            return;
+        }
+        if (isPlayerWithinInteractionArea(playerX, playerY, sleep_location))
+        {
+            core.interactedWith(ActivityType.Sleep);
         }
     }
 
@@ -207,5 +246,6 @@ public class PlayScreen implements Screen {
         tile_map.dispose();
         map_renderer.dispose();
         player.dispose();
+        hud.dispose();
     }
 }

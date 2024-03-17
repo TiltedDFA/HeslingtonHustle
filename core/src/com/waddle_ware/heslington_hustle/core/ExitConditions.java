@@ -14,5 +14,19 @@ public enum ExitConditions
 {
     IsOk,
     TooLow,
-    TooHigh
+    TooHigh;
+    @Override
+    public String toString()
+    {
+        switch (this)
+        {
+            case IsOk:
+                return "Is ok";
+            case TooLow:
+                return "Was too low";
+            case TooHigh:
+                return "Was too high";
+        }
+        return "FAILED";
+    }
 }

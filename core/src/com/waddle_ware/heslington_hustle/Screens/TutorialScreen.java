@@ -51,7 +51,7 @@ public class TutorialScreen implements Screen {
                         game.setScreen(new MenuScreen(game));
                         break;
                     case PlayScreen:
-                        game.setScreen(new PlayScreen());
+                        game.setScreen(new PlayScreen(game));
                         break;
                     default:
                         game.setScreen(new MenuScreen(game));

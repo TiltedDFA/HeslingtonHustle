@@ -8,5 +8,21 @@ public enum ActivityType
     Study,
     Recreation,
     Food,
-    Sleep
+    Sleep;
+    @Override
+    public String toString()
+    {
+        switch (this)
+        {
+            case Recreation:
+                return "Recreation";
+            case Study:
+                return "Study";
+            case Food:
+                return "Food";
+            case Sleep:
+                return "Sleep";
+        }
+        return "FAILED";
+    }
 }
