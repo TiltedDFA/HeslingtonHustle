@@ -137,6 +137,11 @@ public class Avatar {
         return player_y;
     }
 
+    public void setPlayerLoc(float x, float y){
+        player_x = x;
+        player_y = y;
+    }
+
     public void dispose() {
         this.player_sprite.dispose();
     }

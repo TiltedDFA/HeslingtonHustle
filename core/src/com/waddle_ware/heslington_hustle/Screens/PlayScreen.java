@@ -73,10 +73,14 @@ public class PlayScreen implements Screen {
         world_width = map_tile_width * tile_width;
         world_height = world_width / target_aspect_ratio;
         System.out.printf("width: %f, height: %f", world_width,world_height);
+
         player = new Avatar(0, 0, world_height, world_width);
+        player.setPlayerLoc(260, 250);
+
         // Set the viewport to use the whole screen with the desired aspect ratio
         viewport = new FitViewport(world_width, world_height, camera);
         hud = new HUD(core);
+
         // Center the camera on the tile map
         camera.position.set(world_width / 2f, world_height / 2f, 0);
         camera.update();
@@ -122,7 +126,8 @@ public class PlayScreen implements Screen {
 
         // Render player sprite
         map_renderer.getBatch().begin();
-        player.render(map_renderer);// Draw sprite in updated position with specified dimensions
+        player.render(map_renderer);// Draw sprite in updated position with specified dimensions        
+
         hud.render(map_renderer.getBatch());
         map_renderer.getBatch().end();
 
