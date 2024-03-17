@@ -85,7 +85,10 @@ public class Core
         }
         return new ResourceExitConditions(null, ExitConditions.IsOk);
     }
-
+    public boolean isLastDay()
+    {
+        return this.day >= (MAX_NUMBER_OF_DAYS - 1);
+    }
     /**
      * Checks whether the game has ended. (Intended to be used
      * to indicate a need to change from the play screen).
@@ -93,7 +96,7 @@ public class Core
      */
     public boolean hasEnded()
     {
-        return this.day >= (MAX_NUMBER_OF_DAYS - 1) && this.time.getMinutesRemaining() == 0;
+         return isLastDay() && this.time.getMinutesRemaining() == 0;
     }
 
     /**
@@ -122,7 +125,7 @@ public class Core
      */
     public boolean hasPlayerFailed()
     {
-        if(!hasEnded())
+        if(!isLastDay())
             throw new RuntimeException("hasPlayerFailed has been called before the game has ended");
 
         // fail conditions are missed studying for 2 days
@@ -153,7 +156,7 @@ public class Core
      */
     public int generateScore()
     {
-        if(!hasEnded())
+        if(!isLastDay())
             throw new RuntimeException("generateScore has been called before the game has ended");
         int score = 0;
         for (int i = 0; i < 7; ++i)

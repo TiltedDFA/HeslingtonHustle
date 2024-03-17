@@ -213,7 +213,11 @@ public class PlayScreen implements Screen {
         }
         if (isPlayerWithinInteractionArea(playerX, playerY, sleep_location))
         {
-            core.interactedWith(ActivityType.Sleep);
+            if(core.isLastDay())
+            {
+                game.setScreen(new EndScreen(game, !core.hasPlayerFailed(), core.generateScore()));
+            }
+            else core.interactedWith(ActivityType.Sleep);
         }
     }
 
