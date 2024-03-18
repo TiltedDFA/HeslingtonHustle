@@ -7,7 +7,7 @@ import java.time.Clock;
 //16hours
 public class Time implements ResourceBase
 {
-    static final private int TIME_PER_STUDY = -1;
+    static final private int TIME_PER_STUDY = -120;
     static final private int TIME_PER_RECREATIONAL = -120;
     static final private int TIME_PER_FOOD = -60;
     static final public int MINUTES_PER_DAY = 16 * 60;

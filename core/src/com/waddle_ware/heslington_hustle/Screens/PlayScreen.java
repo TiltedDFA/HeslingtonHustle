@@ -128,7 +128,7 @@ public class PlayScreen implements Screen {
 
         // Render player sprite
         map_renderer.getBatch().begin();
-        player.render(map_renderer);// Draw sprite in updated position with specified dimensions        
+        player.render(map_renderer);// Draw sprite in updated position with specified dimensions
 
         hud.render(map_renderer.getBatch());
         map_renderer.getBatch().end();
@@ -201,20 +201,25 @@ public class PlayScreen implements Screen {
         // Check for interaction with each activity location
         if (isPlayerWithinInteractionArea(playerX, playerY, study_location)) {
             final ResourceExitConditions exit_value = core.interactedWith(ActivityType.Study);
+            if(exit_value.getConditions() == ExitConditions.IsOk) return;
             //visually output why the interaction failed
             //tmp:
             System.out.printf("%s%s\n",exit_value.getTypes().toString(),exit_value.getConditions().toString());
-        } if (isPlayerWithinInteractionArea(playerX, playerY, recreation_location)) {
+        }
+        if (isPlayerWithinInteractionArea(playerX, playerY, recreation_location)) {
             final ResourceExitConditions exit_value = core.interactedWith(ActivityType.Recreation);
             if(exit_value.getConditions() == ExitConditions.IsOk) return;
             System.out.printf("%s%s\n",exit_value.getTypes().toString(),exit_value.getConditions().toString());
-        } if (isPlayerWithinInteractionArea(playerX, playerY, food_location)) { // Food and sleep should not be able to fail, so they can remain unchecked
+        }
+        if (isPlayerWithinInteractionArea(playerX, playerY, food_location)) { // Food and sleep should not be able to fail, so they can remain unchecked
             core.interactedWith(ActivityType.Food);
             return;
-        } if (isPlayerWithinInteractionArea(playerX, playerY, sleep_location)) {
+        }
+        if (isPlayerWithinInteractionArea(playerX, playerY, sleep_location)) {
             if(core.isLastDay()) {
                 game.setScreen(new EndScreen(game, !core.hasPlayerFailed(), core.generateScore()));
             }
+            else core.interactedWith(ActivityType.Sleep);
         }
     }
 

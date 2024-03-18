@@ -17,7 +17,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import static com.waddle_ware.heslington_hustle.PlayerAnimator.state_time;
 
 public class Avatar {
-    private final Texture player_sprite; // Player image
+//    private final Texture player_sprite; // Player image
     private final float player_size;
     private float player_x, player_y;
     private final Vector2 velocity;
@@ -33,7 +33,7 @@ public class Avatar {
         this.player_y = plyr_y;
         this.velocity = new Vector2(0,0);
         this.player_size = 24f;
-        this.player_sprite = new Texture("player.png");
+//        this.player_sprite = new Texture("player.png");
         this.world_height = world_height;
         this.world_width = world_width;
     }
@@ -143,6 +143,6 @@ public class Avatar {
     }
 
     public void dispose() {
-        this.player_sprite.dispose();
+//        this.player_sprite.dispose();
     }
 }

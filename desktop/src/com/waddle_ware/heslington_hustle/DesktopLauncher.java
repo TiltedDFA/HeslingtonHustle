@@ -10,6 +10,7 @@ public class DesktopLauncher {
 		config.useVsync(true);
 		config.setForegroundFPS(60);
 		config.setTitle("HestlingtonHustle");
+		config.setWindowIcon();
 		new Lwjgl3Application(new HeslingtonHustle(), config);
 	}
 }
