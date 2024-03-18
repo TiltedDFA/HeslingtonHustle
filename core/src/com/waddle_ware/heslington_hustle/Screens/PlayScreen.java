@@ -49,13 +49,19 @@ public class PlayScreen implements Screen {
     private float popupX;
     private float popupY;
 
+    /**
+     * Constructs a new PlayScreen.
+     *
+     * @param game The game instance.
+     */
     public PlayScreen(HeslingtonHustle game)
     {
         this.game = game;
     }
+
     /**
      * Called when this screen becomes the current screen.
-     * Initialises camera, viewport, tile map, and player sprite.
+     * Initialises camera, viewport, tile map, and player avatar.
      */
     @Override
     public void show() {
@@ -257,6 +263,11 @@ public class PlayScreen implements Screen {
         }
     }
 
+    /**
+     * Toggles fullscreen mode of the application.
+     * If the application is currently in fullscreen mode, it switches to windowed mode with the dimensions of the game world.
+     * If the application is in windowed mode, it switches to fullscreen mode using the current display mode.
+     */
     private void toggleFullscreen() {
         is_fullscreen = !is_fullscreen;
 

@@ -80,6 +80,11 @@ public class MenuScreen implements Screen {
     public void show() {
     }
 
+    /**
+     * Called when this screen should render itself.
+     *
+     * @param delta The time in seconds since the last render.
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -89,6 +94,12 @@ public class MenuScreen implements Screen {
         stage.draw();
     }
 
+    /**
+     * Called when the screen is resized.
+     *
+     * @param width  The new width in pixels.
+     * @param height The new height in pixels.
+     */
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
@@ -106,6 +117,10 @@ public class MenuScreen implements Screen {
     public void hide() {
     }
 
+    /**
+     * Disposes of this screen's resources.
+     * This method is called when this screen is no longer needed.
+     */
     @Override
     public void dispose() {
         stage.dispose();

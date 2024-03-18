@@ -13,15 +13,21 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.waddle_ware.heslington_hustle.HeslingtonHustle;
 
+/**
+ * This class represents the games tutorial screen.
+ * It displays controls and instructions on how to play the game.
+ */
 public class TutorialScreen implements Screen {
     private final HeslingtonHustle game;
     private final Stage stage;
     private final ScreenId previous_screen;
     private final Texture tutorial_img;
+
     /**
-     * Constructs a new MenuScreen.
+     * Constructs a new TutorialScreen.
      *
-     * @param game The game instance.
+     * @param game             The game instance.
+     * @param previous_screen The screen to return to upon pressing the back button.
      */
     public TutorialScreen(HeslingtonHustle game, ScreenId previous_screen) {
         this.previous_screen = previous_screen;
@@ -32,6 +38,9 @@ public class TutorialScreen implements Screen {
         initialiseMenu(); // Add menu elements
     }
 
+    /**
+     * Initialises the tutorial screen with associated UI elements.
+     */
     private void initialiseMenu() {
         VerticalGroup tutorial_group = new VerticalGroup();
         tutorial_group.setFillParent(true);
@@ -65,6 +74,11 @@ public class TutorialScreen implements Screen {
     public void show() {
     }
 
+    /**
+     * Called when this screen should render itself.
+     *
+     * @param delta The time in seconds since the last render.
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -86,6 +100,12 @@ public class TutorialScreen implements Screen {
         stage.draw();
     }
 
+    /**
+     * Called when the screen is resized.
+     *
+     * @param width  The new width in pixels.
+     * @param height The new height in pixels.
+     */
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
@@ -103,6 +123,10 @@ public class TutorialScreen implements Screen {
     public void hide() {
     }
 
+    /**
+     * Disposes of this screen's resources.
+     * This method is called when this screen is no longer needed.
+     */
     @Override
     public void dispose() {
         stage.dispose();

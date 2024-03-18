@@ -1,6 +1,7 @@
 package com.waddle_ware.heslington_hustle.core;
 
 /**
+ * Enum representing the conditions of a request to a resource.
  * This is used by resources to determine what the condition of a request
  * to a resource is. Since the resources will have internal representations
  * of the cost of types of activities and the quantity of the resources will
@@ -10,16 +11,19 @@ package com.waddle_ware.heslington_hustle.core;
  * one of these exit statuses. If it's too low or too high this anticipates
  * the GUI giving back some visual feedback of why the activity failed.
  */
-public enum ExitConditions
-{
+public enum ExitConditions {
     IsOk,
     TooLow,
     TooHigh;
+
+    /**
+     * Returns a string representation of the exit condition.
+     *
+     * @return A string describing the exit condition.
+     */
     @Override
-    public String toString()
-    {
-        switch (this)
-        {
+    public String toString() {
+        switch (this) {
             case IsOk:
                 return "Is ok";
             case TooLow:

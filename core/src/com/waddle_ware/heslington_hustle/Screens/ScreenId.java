@@ -1,7 +1,9 @@
 package com.waddle_ware.heslington_hustle.Screens;
 
-public enum ScreenId
-{
+/**
+ * Enum used to identify different screens within the game.
+ */
+public enum ScreenId {
     MenuScreen,
     PlayScreen,
     TutorialScreen

@@ -1,21 +1,23 @@
 package com.waddle_ware.heslington_hustle.core;
 
-
 import java.time.Clock;
 
-//Used to manage time in a day
-//16hours
-public class Time implements ResourceBase
-{
+/**
+ * The Time class manages time in the game, representing a day with a specific duration (16 hours).
+ * It implements the ResourceBase interface for resource management.
+ */
+public class Time implements ResourceBase {
     static final private int TIME_PER_STUDY = -120;
     static final private int TIME_PER_RECREATIONAL = -120;
     static final private int TIME_PER_FOOD = -60;
     static final public int MINUTES_PER_DAY = 16 * 60;
+
     /**
      * This private constant will be used to convert the current minutes
      * to an amount of intervals for updating the GUI layer
      */
     static final private int MINS_IN_INTERVAL = 15;
+
     /**
      * This constant variable will be used to specify the amount
      * of time that needs to pass irl for 1 unit of time to decrement
@@ -29,64 +31,81 @@ public class Time implements ResourceBase
      */
     private long        end_point;
 
-    public Time(int mins_per_dec, int secs_to_dec)
-    {
+    /**
+     * Constructs a Time instance with specified parameters.
+     *
+     * @param mins_per_dec      The number of game minutes to decrement in each update cycle.
+     * @param secs_to_dec       The number of real-time seconds to decrement for each game time decrement.
+     */
+    public Time(int mins_per_dec, int secs_to_dec) {
         this.minutes_remaining = MINUTES_PER_DAY;
         this.game_minutes_per_decrement = mins_per_dec;
         this.milliseconds_irl_to_decrement = secs_to_dec * 1000;
         this.timer = Clock.systemUTC();
         this.end_point = this.timer.millis() + this.milliseconds_irl_to_decrement;
     }
-    //responsible for passively draining time
-    public void update()
-    {
+
+    /**
+     * Updates the time, decrementing game time if necessary.
+     * This method is called to passively drain time.
+     */
+    public void update() {
         if(this.end_point >= this.timer.millis()) return;
         this.minutes_remaining -= this.game_minutes_per_decrement;
         this.end_point = this.timer.millis() + this.milliseconds_irl_to_decrement;
     }
+
     @Override
-    public void reset()
-    {
+    public void reset() {
         this.minutes_remaining = MINUTES_PER_DAY;
     }
 
     /**
-     * This function is intended to be used by the HUD to
-     * get the number of bars to display in the progress bar
-     * @return The number of minutes remaining / MINS_IN_INTERVAL
+     * Gets the number of bars to display in the progress bar on the HUD.
+     *
+     * @return The number of minutes remaining divided by MINS_IN_INTERVAL.
      */
-    public int getIntervalsRemaining()
-    {
+    public int getIntervalsRemaining() {
         if(this.minutes_remaining < 1) return 0;
 
         return (int) Math.ceil((double) this.minutes_remaining / MINS_IN_INTERVAL);
     }
 
     /**
-     * Used by an internal core function to check whether
-     * the game has ended
-     * @return the number of game minutes remaining
+     * Gets the number of game minutes remaining.
+     * Used by internal core function to check whether the game has ended
+     *
+     * @return The number of game minutes remaining.
      */
-    public int getMinutesRemaining()
-    {
+    public int getMinutesRemaining() {
         if(this.minutes_remaining < 1) return 0;
 
         return this.minutes_remaining;
     }
 
+    /**
+     * Determines if the specified amount is sufficient for an activity involving Time.
+     *
+     * @param amount The amount to check against the resource level.
+     * @return ExitConditions.IsOk if the amount is greater than 0; otherwise, ExitConditions.TooLow.
+     */
     @Override
-    public ExitConditions isOk(int amount)
-    {
+    public ExitConditions isOk(int amount) {
         if(amount <= 0) return ExitConditions.TooLow;
         return ExitConditions.IsOk;
     }
 
+    /**
+     * Attempts to perform an activity of a specified type and return the result.
+     * This method checks whether the activity can be performed based on the current state of the Time resource.
+     *
+     * @param type The type of activity to attempt (Study, Recreation, or Food).
+     * @return ResourceExitConditions object indicating the result of the activity attempt.
+     */
     @Override
-    public ResourceExitConditions tryActivityType(ActivityType type)
-    {
+    public ResourceExitConditions tryActivityType(ActivityType type) {
         int cost_of_resource;
-        switch(type)
-        {
+        switch(type) {
             case Study:
                 cost_of_resource = TIME_PER_STUDY;
                 break;
@@ -106,11 +125,15 @@ public class Time implements ResourceBase
         return new ResourceExitConditions(ResourceTypes.Time, condition);
     }
 
+    /**
+     * Performs an activity of a specified type, which affects the Time resource.
+     * Depending on the activity type, the corresponding time is added or subtracted.
+     *
+     * @param type The type of activity to perform (Study, Recreation, or Food).
+     */
     @Override
-    public void doActivity(ActivityType type)
-    {
-        switch(type)
-        {
+    public void doActivity(ActivityType type) {
+        switch(type) {
             case Study:
                 this.minutes_remaining += TIME_PER_STUDY;
                 return;

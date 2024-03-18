@@ -15,8 +15,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.waddle_ware.heslington_hustle.HeslingtonHustle;
 
-public class EndScreen implements Screen
-{
+/**
+ * The EndScreen class represents the screen displayed at the end of the game.
+ * It displays either a win or lose screen based on the game outcome.
+ */
+public class EndScreen implements Screen {
     private final HeslingtonHustle game;
     private final Stage stage;
     private final CharSequence player_score;
@@ -25,20 +28,18 @@ public class EndScreen implements Screen
     private final BitmapFont font;
 
     /**
-     * Constructs new EndScreen
-     * @param game reference to game
-     * @param has_won Value passed in by core at end of game
-     * @param score Value passed in by core at end of game
+     * Constructs a new EndScreen.
+     *
+     * @param game      The game instance.
+     * @param has_won   Boolean value indicating whether the player has won the game.
+     * @param score     The player's score at the end of the game.
      */
-    public EndScreen(HeslingtonHustle game, boolean has_won, int score)
-    {
+    public EndScreen(HeslingtonHustle game, boolean has_won, int score) {
         this.game = game;
-        if(has_won == true)
-        {
+        if(has_won == true) {
             this.to_render = new Texture("WinScreen.png");
         }
-        else
-        {
+        else {
             this.to_render = new Texture("LoseScreen.png");
         }
         this.font_gen = new FreeTypeFontGenerator(Gdx.files.internal("OETZTYP_.TTF"));
@@ -49,8 +50,13 @@ public class EndScreen implements Screen
         Gdx.input.setInputProcessor(stage);
         initialiseMenu(); // Add menu elements
     }
-    private BitmapFont genFont()
-    {
+
+    /**
+     * Generates a custom font for displaying the player's score on the end screen.
+     *
+     * @return The generated BitmapFont object with custom font settings.
+     */
+    private BitmapFont genFont() {
         FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
         param.size = 150;
         param.borderColor = Color.BLACK;
@@ -58,6 +64,10 @@ public class EndScreen implements Screen
         param.borderStraight = false;
         return font_gen.generateFont(param);
     }
+
+    /**
+     * Initialises menu elements for the end screen.
+     */
     private void initialiseMenu() {
         VerticalGroup tutorial_group = new VerticalGroup();
         tutorial_group.setFillParent(true);
@@ -91,6 +101,11 @@ public class EndScreen implements Screen
     public void show() {
     }
 
+    /**
+     * Called when this screen should render itself.
+     *
+     * @param delta The time in seconds since the last render.
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -113,6 +128,12 @@ public class EndScreen implements Screen
         stage.draw();
     }
 
+    /**
+     * Called when the screen is resized.
+     *
+     * @param width  The new width in pixels.
+     * @param height The new height in pixels.
+     */
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
@@ -130,6 +151,10 @@ public class EndScreen implements Screen
     public void hide() {
     }
 
+    /**
+     * Disposes of this screen's resources.
+     * This method is called when this screen is no longer needed.
+     */
     @Override
     public void dispose() {
         stage.dispose();

@@ -1,30 +1,38 @@
 package com.waddle_ware.heslington_hustle.core;
 
-public interface ResourceBase
-{
+/**
+ * The ResourceBase interface defines methods for managing game resources.
+ * It provides functionality to check the availability of resources,
+ * attempt activities, perform activities, and reset resources.
+ */
+public interface ResourceBase {
+
     /**
-     * An Internal function to check whether the amount of
-     * a resource specified would be ok.
-     * @param amount an amount of energy
-     * @return ExitCondition(TooLow, TooHigh, IsOK) indicating
-     * if there is an issue with the amount of energy passed in.
+     * Checks whether the specified amount of a resource is sufficient.
+     *
+     * @param amount The amount of the resource to check.
+     * @return An ExitCondition(TooLow, TooHigh, IsOK) indicating if there are any issues with the amount of the resource.
      */
     ExitConditions isOk(int amount);
+
     /**
-     * This function attempts the current type of activity passed in.
-     * @param type The type of activity that the player is attempting to do
-     * @return ResourceExitCondition signed with the resource type and an
-     * exit condition indicating whether it is possible to do this activity
+     * Attempts to perform the specified type of activity with the resource.
+     *
+     * @param type The type of activity to attempt.
+     * @return A ResourceExitConditions object indicating whether it is possible to perform the activity.
      */
     ResourceExitConditions tryActivityType(ActivityType type);
+
     /**
-     * An unchecked function that will do the activity
-     * @param type the type of activity
+     * An unchecked function to perform the specified type of activity.
+     *
+     * @param type The type of activity.
      */
     void doActivity(ActivityType type);
+
     /**
-     * Resets the resource to the starting state.
-     * Intended to be used upon the day resetting.
+     * Resets the resource to its initial state.
+     * Intended to be used when the day resets.
      */
     void reset();
 }

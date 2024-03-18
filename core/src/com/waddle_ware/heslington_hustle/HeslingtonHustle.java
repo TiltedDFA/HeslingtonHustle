@@ -8,6 +8,11 @@ import com.waddle_ware.heslington_hustle.Screens.MenuScreen;
  * This class initialises the game and sets the initial screen to the PlayScreen.
  */
 public class HeslingtonHustle extends Game {
+
+	/**
+	 * Called when the application is first created.
+	 * Sets the initial screen to the MenuScreen.
+	 */
 	@Override
 	public void create() {
 		setScreen(new MenuScreen(this));
