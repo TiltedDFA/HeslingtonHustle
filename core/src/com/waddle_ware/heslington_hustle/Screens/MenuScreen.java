@@ -1,5 +1,9 @@
 package com.waddle_ware.heslington_hustle.Screens;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.waddle_ware.heslington_hustle.HeslingtonHustle;
 
 import com.badlogic.gdx.Gdx;
@@ -35,6 +39,14 @@ public class MenuScreen implements Screen {
         this.background  = new Texture("MenuScreen.png");
         initialiseMenu(); // Add menu elements
     }
+    private ImageButton.ImageButtonStyle createTexRegDraw(String path)
+    {
+        ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
+        style.imageUp = new TextureRegionDrawable( new TextureRegion(new Texture(path)));
+        style.imageUp.setMinWidth(475);
+        style.imageUp.setMinHeight(125);
+        return style;
+    }
 
     /**
      * Initialises menu elements, such as buttons and their listeners.
@@ -43,22 +55,22 @@ public class MenuScreen implements Screen {
         VerticalGroup menu_group = new VerticalGroup();
         menu_group.setFillParent(true);
         menu_group.center(); // centre align vertically
+        menu_group.align(Align.bottom);
         stage.addActor(menu_group);
 
         TextButtonStyle button_style = new TextButtonStyle();
         button_style.font = new BitmapFont(); // default font
 
         // Play button
-        TextButton playButton = new TextButton("Play", button_style);
+        ImageButton playButton = new ImageButton(createTexRegDraw("PlayButton.png"));
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new PlayScreen(game));
             }
         });
-        playButton.setTransform(true);
-        playButton.scaleBy(3);
-        TextButton tutorialButton = new TextButton("Tutorial", button_style);
+
+        ImageButton tutorialButton = new ImageButton(createTexRegDraw("TutorialButton.png"));
         tutorialButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -66,7 +78,7 @@ public class MenuScreen implements Screen {
             }
         });
         // Exit button
-        TextButton exitButton = new TextButton("Exit", button_style);
+        ImageButton exitButton = new ImageButton(createTexRegDraw("ExitButton.png"));
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
