@@ -1,4 +1,5 @@
 package com.waddle_ware.heslington_hustle.Screens;
+import com.badlogic.gdx.graphics.Texture;
 import com.waddle_ware.heslington_hustle.HeslingtonHustle;
 
 import com.badlogic.gdx.Gdx;
@@ -20,6 +21,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 public class MenuScreen implements Screen {
     private final HeslingtonHustle game;
     private final Stage stage;
+    private final Texture background;
 
     /**
      * Constructs a new MenuScreen.
@@ -28,9 +30,9 @@ public class MenuScreen implements Screen {
      */
     public MenuScreen(HeslingtonHustle game) {
         this.game = game;
-        stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+        stage = new Stage(new FitViewport(1920, 1080));
         Gdx.input.setInputProcessor(stage);
-
+        this.background  = new Texture("MenuScreen.png");
         initialiseMenu(); // Add menu elements
     }
 
@@ -54,6 +56,8 @@ public class MenuScreen implements Screen {
                 game.setScreen(new PlayScreen(game));
             }
         });
+        playButton.setTransform(true);
+        playButton.scaleBy(3);
         TextButton tutorialButton = new TextButton("Tutorial", button_style);
         tutorialButton.addListener(new ClickListener() {
             @Override
@@ -91,6 +95,18 @@ public class MenuScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+
+        stage.getBatch().begin();
+        float scaleX = stage.getViewport().getWorldWidth() / background.getWidth();
+        float scaleY = stage.getViewport().getWorldHeight() / background.getHeight();
+        float scale = Math.min(scaleX, scaleY);
+        float width = background.getWidth() * scale;
+        float height = background.getHeight() * scale;
+        float x = (stage.getViewport().getWorldWidth() - width) / 2;
+        float y = (stage.getViewport().getWorldHeight() - height) / 2;
+        stage.getBatch().draw(background, x, y, width, height);
+        stage.getBatch().end();
+
         stage.draw();
     }
 
@@ -124,5 +140,6 @@ public class MenuScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        background.dispose();
     }
 }
