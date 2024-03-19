@@ -48,7 +48,6 @@ public class EndScreen implements Screen {
         this.player_score = Integer.toString(score);
         stage = new Stage(new FitViewport(1920, 1080)); // Set virtual screen size to 16:9 aspect ratio
         Gdx.input.setInputProcessor(stage);
-        initialiseMenu(); // Add menu elements
     }
 
     /**
@@ -63,38 +62,6 @@ public class EndScreen implements Screen {
         param.borderWidth = 6f;
         param.borderStraight = false;
         return font_gen.generateFont(param);
-    }
-
-    /**
-     * Initialises menu elements for the end screen.
-     */
-    private void initialiseMenu() {
-        VerticalGroup tutorial_group = new VerticalGroup();
-        tutorial_group.setFillParent(true);
-        tutorial_group.left().bottom();
-        stage.addActor(tutorial_group);
-
-//        TextButton.TextButtonStyle button_style = new TextButton.TextButtonStyle();
-//        button_style.font = new BitmapFont(); // default font
-
-//        // Play button
-//        TextButton backButton = new TextButton("back", button_style);
-//        backButton.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                switch (previous_screen) {
-//                    case MenuScreen:
-//                        game.setScreen(new MenuScreen(game));
-//                        break;
-//                    case PlayScreen:
-//                        game.setScreen(new PlayScreen());
-//                        break;
-//                    default:
-//                        game.setScreen(new MenuScreen(game));
-//                }
-//            }
-//        });
-//        tutorial_group.addActor(backButton);
     }
 
     @Override

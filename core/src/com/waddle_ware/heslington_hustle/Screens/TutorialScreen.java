@@ -4,12 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.waddle_ware.heslington_hustle.HeslingtonHustle;
 
@@ -32,10 +33,18 @@ public class TutorialScreen implements Screen {
     public TutorialScreen(HeslingtonHustle game, ScreenId previous_screen) {
         this.previous_screen = previous_screen;
         this.game = game;
-        tutorial_img = new Texture("tutorial.png");
+        tutorial_img = new Texture("TutorialScreen.png");
         stage = new Stage(new FitViewport(1920, 1080)); // Set virtual screen size to 16:9 aspect ratio
         Gdx.input.setInputProcessor(stage);
         initialiseMenu(); // Add menu elements
+    }
+
+    private ImageButton.ImageButtonStyle createTexRegDraw(String path) {
+        ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
+        style.imageUp = new TextureRegionDrawable( new TextureRegion(new Texture(path)));
+        style.imageUp.setMinWidth(475);
+        style.imageUp.setMinHeight(125);
+        return style;
     }
 
     /**
@@ -44,15 +53,12 @@ public class TutorialScreen implements Screen {
     private void initialiseMenu() {
         VerticalGroup tutorial_group = new VerticalGroup();
         tutorial_group.setFillParent(true);
-        tutorial_group.left().bottom();
+        tutorial_group.left().top().padTop(7);
         stage.addActor(tutorial_group);
 
-        TextButton.TextButtonStyle button_style = new TextButton.TextButtonStyle();
-        button_style.font = new BitmapFont(); // default font
-
-        // Play button
-        TextButton backButton = new TextButton("back", button_style);
-        backButton.addListener(new ClickListener() {
+        // Back button
+        ImageButton back_button = new ImageButton(createTexRegDraw("BackButton.png"));
+        back_button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 switch (previous_screen) {
@@ -67,11 +73,16 @@ public class TutorialScreen implements Screen {
                 }
             }
         });
-        tutorial_group.addActor(backButton);
+        tutorial_group.addActor(back_button);
     }
 
+    /**
+     * Called when this screen becomes the current screen of the game.
+     * Sets the input processor to the stage, allowing it to receive input events.
+     */
     @Override
     public void show() {
+        Gdx.input.setInputProcessor(stage);
     }
 
     /**
@@ -119,8 +130,13 @@ public class TutorialScreen implements Screen {
     public void resume() {
     }
 
+    /**
+     * Hides the screen and clears the input processor, preventing further input events.
+     * This method is called when the screen is no longer visible.
+     */
     @Override
     public void hide() {
+        Gdx.input.setInputProcessor(null);
     }
 
     /**

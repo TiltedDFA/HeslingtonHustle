@@ -9,11 +9,8 @@ import com.waddle_ware.heslington_hustle.HeslingtonHustle;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -39,8 +36,14 @@ public class MenuScreen implements Screen {
         this.background  = new Texture("MenuScreen.png");
         initialiseMenu(); // Add menu elements
     }
-    private ImageButton.ImageButtonStyle createTexRegDraw(String path)
-    {
+
+    /**
+     * Creates an ImageButtonStyle with a provided image path.
+     *
+     * @param path The path to the image file.
+     * @return The ImageButtonStyle created with the specified image.
+     */
+    private ImageButton.ImageButtonStyle createTexRegDraw(String path) {
         ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
         style.imageUp = new TextureRegionDrawable( new TextureRegion(new Texture(path)));
         style.imageUp.setMinWidth(475);
@@ -58,42 +61,45 @@ public class MenuScreen implements Screen {
         menu_group.align(Align.bottom);
         stage.addActor(menu_group);
 
-        TextButtonStyle button_style = new TextButtonStyle();
-        button_style.font = new BitmapFont(); // default font
-
         // Play button
-        ImageButton playButton = new ImageButton(createTexRegDraw("PlayButton.png"));
-        playButton.addListener(new ClickListener() {
+        ImageButton play_button = new ImageButton(createTexRegDraw("PlayButton.png"));
+        play_button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new PlayScreen(game));
             }
         });
 
-        ImageButton tutorialButton = new ImageButton(createTexRegDraw("TutorialButton.png"));
-        tutorialButton.addListener(new ClickListener() {
+        // Tutorial button
+        ImageButton tutorial_button = new ImageButton(createTexRegDraw("TutorialButton.png"));
+        tutorial_button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new TutorialScreen(game, ScreenId.MenuScreen));
             }
         });
+
         // Exit button
-        ImageButton exitButton = new ImageButton(createTexRegDraw("ExitButton.png"));
-        exitButton.addListener(new ClickListener() {
+        ImageButton exit_button = new ImageButton(createTexRegDraw("ExitButton.png"));
+        exit_button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.exit();
             }
         });
 
-        menu_group.addActor(playButton);
-        menu_group.addActor(tutorialButton);
-        menu_group.addActor(exitButton);
+        menu_group.addActor(play_button);
+        menu_group.addActor(tutorial_button);
+        menu_group.addActor(exit_button);
     }
 
-
+    /**
+     * Called when this screen becomes the current screen of the game.
+     * Sets the input processor to the stage, allowing it to receive input events.
+     */
     @Override
     public void show() {
+        Gdx.input.setInputProcessor(stage);
     }
 
     /**
@@ -141,8 +147,13 @@ public class MenuScreen implements Screen {
     public void resume() {
     }
 
+    /**
+     * Hides the screen and clears the input processor, preventing further input events.
+     * This method is called when the screen is no longer visible.
+     */
     @Override
     public void hide() {
+        Gdx.input.setInputProcessor(null);
     }
 
     /**
