@@ -145,8 +145,6 @@ public class PlayScreen implements Screen {
         if (interaction_popup != null) {
             interaction_popup.render(map_renderer.getBatch(), popupX, popupY); // Adjust popupX and popupY as needed
         }
-
-//        System.out.println("Player's current coordinates: X=" + player.getPlayerX() + ", Y=" + player.getPlayerY());
     }
 
     /** Called when the window is resized.
@@ -201,20 +199,22 @@ public class PlayScreen implements Screen {
      */
     private void handleInteraction() {
         // Get players current position
-        float playerX = player.getPlayerX();
-        float playerY = player.getPlayerY();
+        final float playerX = player.getPlayerX();
+        final float playerY = player.getPlayerY();
 
         // Check for interaction with each activity location
         if (isPlayerWithinInteractionArea(playerX, playerY, study_location)) {
             final ResourceExitConditions exit_value = core.interactedWith(ActivityType.Study);
-            if(exit_value.getConditions() == ExitConditions.IsOk) return;
+            if(exit_value.getConditions() == ExitConditions.IsOk)
+                return;
             //visually output why the interaction failed
             //tmp:
             System.out.printf("%s%s\n",exit_value.getTypes().toString(),exit_value.getConditions().toString());
         }
         if (isPlayerWithinInteractionArea(playerX, playerY, recreation_location)) {
             final ResourceExitConditions exit_value = core.interactedWith(ActivityType.Recreation);
-            if(exit_value.getConditions() == ExitConditions.IsOk) return;
+            if(exit_value.getConditions() == ExitConditions.IsOk)
+                return;
             System.out.printf("%s%s\n",exit_value.getTypes().toString(),exit_value.getConditions().toString());
         }
         if (isPlayerWithinInteractionArea(playerX, playerY, food_location)) { // Food and sleep should not be able to fail, so they can remain unchecked
@@ -313,5 +313,6 @@ public class PlayScreen implements Screen {
         map_renderer.dispose();
         player.dispose();
         hud.dispose();
+        interaction_popup.dispose();
     }
 }

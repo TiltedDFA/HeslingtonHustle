@@ -26,6 +26,9 @@ public class Avatar {
     private final float world_height;
     private final float world_width;
     private final static float ACCELERATION = 10f;
+    //the player's speed will be multiplied by this so
+    //the player's current velocity will be reduced by
+    //1 - friction every frame/update cycle
     private final static float FRICTION = 0.8f;
 
     private final static float MAX_VELOCITY = 200f;
@@ -53,8 +56,8 @@ public class Avatar {
      * @param tile_map The TiledMap representing the game map.
      */
     public void update(TiledMap tile_map) {
-        float oldX = this.player_x;
-        float oldY = this.player_y;
+        final float oldX = this.player_x;
+        final float oldY = this.player_y;
 
         this.velocity.clamp(0, MAX_VELOCITY);
         movePlayer(this.velocity.x * Gdx.graphics.getDeltaTime(), this.velocity.y * Gdx.graphics.getDeltaTime());
@@ -71,7 +74,7 @@ public class Avatar {
      * @param oldX     The previous x-coordinate of the player.
      * @param oldY     The previous y-coordinate of the player.
      */
-    public void onCollision(TiledMap tile_map, float oldX, float oldY) {
+    public void onCollision(TiledMap tile_map, final float oldX, final float oldY) {
         float newX = this.player_x;
         float newY = this.player_y;
 
@@ -174,8 +177,8 @@ public class Avatar {
         // Move player sprite based on key input
         if (Gdx.input.isKeyPressed(Input.Keys.W)) { velocity.y += ACCELERATION; y_keys_pressed = true;}
         if (Gdx.input.isKeyPressed(Input.Keys.S)) { velocity.y -= ACCELERATION; y_keys_pressed = true;}
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) { velocity.x -= ACCELERATION; x_keys_pressed = true;}
         if (Gdx.input.isKeyPressed(Input.Keys.D)) { velocity.x += ACCELERATION; x_keys_pressed = true;}
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) { velocity.x -= ACCELERATION; x_keys_pressed = true;}
 
         // Apply friction if no movement keys are pressed
         if(!x_keys_pressed) velocity.x *= FRICTION;
@@ -218,7 +221,5 @@ public class Avatar {
     /**
      * Cleans up resources associated with the Avatar object.
      */
-    public void dispose() {
-//        this.player_sprite.dispose();
-    }
+    public void dispose() {}
 }

@@ -82,26 +82,11 @@ public class Time implements ResourceBase {
 
         return this.minutes_remaining;
     }
-
-    /**
-     * Determines if the specified amount is sufficient for an activity involving Time.
-     *
-     * @param amount The amount to check against the resource level.
-     * @return ExitConditions.IsOk if the amount is greater than 0; otherwise, ExitConditions.TooLow.
-     */
     @Override
     public ExitConditions isOk(int amount) {
         if(amount <= 0) return ExitConditions.TooLow;
         return ExitConditions.IsOk;
     }
-
-    /**
-     * Attempts to perform an activity of a specified type and return the result.
-     * This method checks whether the activity can be performed based on the current state of the Time resource.
-     *
-     * @param type The type of activity to attempt (Study, Recreation, or Food).
-     * @return ResourceExitConditions object indicating the result of the activity attempt.
-     */
     @Override
     public ResourceExitConditions tryActivityType(ActivityType type) {
         int cost_of_resource;
@@ -124,13 +109,6 @@ public class Time implements ResourceBase {
         final ExitConditions condition = isOk(potential_state);
         return new ResourceExitConditions(ResourceTypes.Time, condition);
     }
-
-    /**
-     * Performs an activity of a specified type, which affects the Time resource.
-     * Depending on the activity type, the corresponding time is added or subtracted.
-     *
-     * @param type The type of activity to perform (Study, Recreation, or Food).
-     */
     @Override
     public void doActivity(ActivityType type) {
         switch(type) {

@@ -115,13 +115,13 @@ public class MenuScreen implements Screen {
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
 
         stage.getBatch().begin();
-        float scaleX = stage.getViewport().getWorldWidth() / background.getWidth();
-        float scaleY = stage.getViewport().getWorldHeight() / background.getHeight();
-        float scale = Math.min(scaleX, scaleY);
-        float width = background.getWidth() * scale;
-        float height = background.getHeight() * scale;
-        float x = (stage.getViewport().getWorldWidth() - width) / 2;
-        float y = (stage.getViewport().getWorldHeight() - height) / 2;
+        final float scaleX = stage.getViewport().getWorldWidth() / background.getWidth();
+        final float scaleY = stage.getViewport().getWorldHeight() / background.getHeight();
+        final float scale = Math.min(scaleX, scaleY);
+        final float width = background.getWidth() * scale;
+        final float height = background.getHeight() * scale;
+        final float x = (stage.getViewport().getWorldWidth() - width) / 2;
+        final float y = (stage.getViewport().getWorldHeight() - height) / 2;
         stage.getBatch().draw(background, x, y, width, height);
         stage.getBatch().end();
 

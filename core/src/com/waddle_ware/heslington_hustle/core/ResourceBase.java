@@ -17,7 +17,7 @@ public interface ResourceBase {
 
     /**
      * Attempts to perform the specified type of activity with the resource.
-     *
+     * Does NOT change the internal state if a request succeeds
      * @param type The type of activity to attempt.
      * @return A ResourceExitConditions object indicating whether it is possible to perform the activity.
      */

@@ -5,8 +5,8 @@ package com.waddle_ware.heslington_hustle;
  * It stores the coordinates of the location, interaction radius, and a name to identify it.
  */
 public class ActivityLocation {
-    private float x; // The x-coordinate of the activity location
-    private float y; // The y-coordinate of the activity location
+    private final float x; // The x-coordinate of the activity location
+    private final float y; // The y-coordinate of the activity location
     private final float radius; // The radius of the activity location
     private final String name; // The name of the activity location
 

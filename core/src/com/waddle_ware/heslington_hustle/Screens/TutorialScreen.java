@@ -68,8 +68,6 @@ public class TutorialScreen implements Screen {
                     case PlayScreen:
                         game.setScreen(new PlayScreen(game));
                         break;
-                    default:
-                        game.setScreen(new MenuScreen(game));
                 }
             }
         });
@@ -98,13 +96,13 @@ public class TutorialScreen implements Screen {
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
 
         stage.getBatch().begin();
-        float scaleX = stage.getViewport().getWorldWidth() / tutorial_img.getWidth();
-        float scaleY = stage.getViewport().getWorldHeight() / tutorial_img.getHeight();
-        float scale = Math.min(scaleX, scaleY);
-        float width = tutorial_img.getWidth() * scale;
-        float height = tutorial_img.getHeight() * scale;
-        float x = (stage.getViewport().getWorldWidth() - width) / 2;
-        float y = (stage.getViewport().getWorldHeight() - height) / 2;
+        final float scaleX = stage.getViewport().getWorldWidth() / tutorial_img.getWidth();
+        final float scaleY = stage.getViewport().getWorldHeight() / tutorial_img.getHeight();
+        final float scale = Math.min(scaleX, scaleY);
+        final float width = tutorial_img.getWidth() * scale;
+        final float height = tutorial_img.getHeight() * scale;
+        final float x = (stage.getViewport().getWorldWidth() - width) / 2;
+        final float y = (stage.getViewport().getWorldHeight() - height) / 2;
         stage.getBatch().draw(tutorial_img, x, y, width, height);
         stage.getBatch().end();
 
