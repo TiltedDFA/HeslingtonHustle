@@ -1,11 +1,32 @@
 package com.waddle_ware.heslington_hustle.core;
 
 /**
- * This is to be used to identify the type of activity that an activity entity is.
+ * Enum representing types of activities in the game.
+ * This enum is used to identify different types of activities.
  */
-public enum ActivityType
-{
+public enum ActivityType {
     Study,
     Recreation,
-    Food
+    Food,
+    Sleep;
+
+    /**
+     * Returns a string representation of the activity type.
+     *
+     * @return A string describing the activity type.
+     */
+    @Override
+    public String toString() {
+        switch (this) {
+            case Recreation:
+                return "Recreation";
+            case Study:
+                return "Study";
+            case Food:
+                return "Food";
+            case Sleep:
+                return "Sleep";
+        }
+        return "FAILED";
+    }
 }

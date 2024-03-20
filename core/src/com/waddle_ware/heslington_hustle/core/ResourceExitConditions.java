@@ -1,18 +1,36 @@
 package com.waddle_ware.heslington_hustle.core;
 
 /**
- * This is used by resources to determine what the condition of a request
- * to a resource is. Since the resources will have internal representation
- * of the cost of types of activities and the quantity of the resources will
- * only be changed by a TryActivityType function that accepts activity types.
- * Therefore, the need to know whether the activity succeeded or if it failed
- * why it failed will is handled by the TryActivityType functions returning
- * one of these exit statuses. If it's too low or too high this anticipates
- * the GUI giving back some visual feedback of why the activity failed.
+ * Represents the combination of exit conditions and resource types
+ * returned from the core to the GUI, providing visual cues for
+ * why an attempted interaction failed, if applicable.
  */
-public enum ResourceExitConditions
-{
-    IsOk,
-    TooLow,
-    TooHigh
+public class ResourceExitConditions {
+    private final ResourceTypes types;
+    private final ExitConditions conditions;
+
+    /**
+     * Constructs a ResourceExitConditions object with the specified resource type and exit condition.
+     *
+     * @param types      The type of resource involved in the interaction.
+     * @param conditions The exit condition indicating the outcome of the interaction.
+     */
+    public ResourceExitConditions(ResourceTypes types, ExitConditions conditions) {
+        this.types = types;
+        this.conditions = conditions;
+    }
+
+    /**
+     * Gets the type of resource involved in the interaction.
+     *
+     * @return The type of resource.
+     */
+    public ResourceTypes getTypes() { return this.types;}
+
+    /**
+     * Gets the exit condition indicating the outcome of the interaction.
+     *
+     * @return The exit condition.
+     */
+    public ExitConditions getConditions() { return this.conditions;}
 }
