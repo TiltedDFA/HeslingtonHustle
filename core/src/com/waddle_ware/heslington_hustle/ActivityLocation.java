@@ -31,7 +31,7 @@ public class ActivityLocation {
      * @return The y-coordinate of the activity location.
      */
     public float getX() {
-        return x;
+        return this.x;
     }
 
     /**
@@ -40,7 +40,7 @@ public class ActivityLocation {
      * @return The y-coordinate of the activity location.
      */
     public float getY() {
-        return y;
+        return this.y;
     }
 
     /**
@@ -49,7 +49,7 @@ public class ActivityLocation {
      * @return The radius of the activity location.
      */
     public float getRadius() {
-        return radius;
+        return this.radius;
     }
 
     /**
@@ -58,6 +58,6 @@ public class ActivityLocation {
      * @return The name of the activity location.
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 }

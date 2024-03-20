@@ -33,9 +33,9 @@ public class TutorialScreen implements Screen {
     public TutorialScreen(HeslingtonHustle game, ScreenId previous_screen) {
         this.previous_screen = previous_screen;
         this.game = game;
-        tutorial_img = new Texture("TutorialScreen.png");
-        stage = new Stage(new FitViewport(1920, 1080)); // Set virtual screen size to 16:9 aspect ratio
-        Gdx.input.setInputProcessor(stage);
+        this.tutorial_img = new Texture("TutorialScreen.png");
+        this.stage = new Stage(new FitViewport(1920, 1080)); // Set virtual screen size to 16:9 aspect ratio
+        Gdx.input.setInputProcessor(this.stage);
         initialiseMenu(); // Add menu elements
     }
 
@@ -54,7 +54,7 @@ public class TutorialScreen implements Screen {
         VerticalGroup tutorial_group = new VerticalGroup();
         tutorial_group.setFillParent(true);
         tutorial_group.left().top().padTop(7);
-        stage.addActor(tutorial_group);
+        this.stage.addActor(tutorial_group);
 
         // Back button
         ImageButton back_button = new ImageButton(createTexRegDraw("BackButton.png"));
@@ -80,7 +80,7 @@ public class TutorialScreen implements Screen {
      */
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(stage);
+        Gdx.input.setInputProcessor(this.stage);
     }
 
     /**
@@ -93,20 +93,20 @@ public class TutorialScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        this.stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
 
-        stage.getBatch().begin();
-        final float scaleX = stage.getViewport().getWorldWidth() / tutorial_img.getWidth();
-        final float scaleY = stage.getViewport().getWorldHeight() / tutorial_img.getHeight();
+        this.stage.getBatch().begin();
+        final float scaleX = this.stage.getViewport().getWorldWidth() / this.tutorial_img.getWidth();
+        final float scaleY = this.stage.getViewport().getWorldHeight() / this.tutorial_img.getHeight();
         final float scale = Math.min(scaleX, scaleY);
-        final float width = tutorial_img.getWidth() * scale;
-        final float height = tutorial_img.getHeight() * scale;
-        final float x = (stage.getViewport().getWorldWidth() - width) / 2;
-        final float y = (stage.getViewport().getWorldHeight() - height) / 2;
-        stage.getBatch().draw(tutorial_img, x, y, width, height);
-        stage.getBatch().end();
+        final float width = this.tutorial_img.getWidth() * scale;
+        final float height = this.tutorial_img.getHeight() * scale;
+        final float x = (this.stage.getViewport().getWorldWidth() - width) / 2;
+        final float y = (this.stage.getViewport().getWorldHeight() - height) / 2;
+        this.stage.getBatch().draw(this.tutorial_img, x, y, width, height);
+        this.stage.getBatch().end();
 
-        stage.draw();
+        this.stage.draw();
     }
 
     /**
@@ -117,7 +117,7 @@ public class TutorialScreen implements Screen {
      */
     @Override
     public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
+        this.stage.getViewport().update(width, height, true);
     }
 
     @Override
@@ -143,7 +143,7 @@ public class TutorialScreen implements Screen {
      */
     @Override
     public void dispose() {
-        stage.dispose();
-        tutorial_img.dispose();
+        this.stage.dispose();
+        this.tutorial_img.dispose();
     }
 }

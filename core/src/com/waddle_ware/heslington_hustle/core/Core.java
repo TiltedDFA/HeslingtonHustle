@@ -8,6 +8,10 @@ public class Core {
     private static final int MEAL_SCORE_VALUE = 100;
     private static final int RELAX_SCORE_VALUE = 100;
     private static final int STUDY_SCORE_VALUE = 100;
+    private static final int MEAL_SCORE_PENALTY = -100;
+    private static final int RELAX_SCORE_PENALTY = -100;
+    private static final int STUDY_TOO_MUCH_PENALTY = -100;
+    private static final int TOO_MUCH_STUDY_THRESHOLD = 3;
 
     private static final int MAX_NUMBER_OF_DAYS = 7;
 
@@ -158,9 +162,22 @@ public class Core {
             throw new RuntimeException("generateScore has been called before the game has ended");
         int score = 0;
         for (int i = 0; i < 7; ++i) {
-            score += this.meal_count[i]  * MEAL_SCORE_VALUE;
-            score += this.relax_count[i] * RELAX_SCORE_VALUE;
-            score += this.study_count[i] * STUDY_SCORE_VALUE;
+
+            if(this.meal_count[i] == 0)
+                score += MEAL_SCORE_PENALTY;
+            else
+                score += this.meal_count[i]  * MEAL_SCORE_VALUE;
+
+            if(this.relax_count[i] == 0)
+                score += RELAX_SCORE_PENALTY;
+            else
+                score += this.relax_count[i]  * RELAX_SCORE_VALUE;
+
+            if(this.study_count[i] >= TOO_MUCH_STUDY_THRESHOLD)
+                score += STUDY_TOO_MUCH_PENALTY;
+            else
+                score += this.study_count[i]  * STUDY_SCORE_VALUE;
+
         }
         return score;
     }

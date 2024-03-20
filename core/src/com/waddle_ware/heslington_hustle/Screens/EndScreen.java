@@ -45,9 +45,9 @@ public class EndScreen implements Screen {
         this.font_gen = new FreeTypeFontGenerator(Gdx.files.internal("OETZTYP_.TTF"));
         this.font   = genFont();
         this.font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        this.player_score = Integer.toString(score);
-        stage = new Stage(new FitViewport(1920, 1080)); // Set virtual screen size to 16:9 aspect ratio
-        Gdx.input.setInputProcessor(stage);
+        this.player_score = score < 0 ? "0" : Integer.toString(score);
+        this.stage = new Stage(new FitViewport(1920, 1080)); // Set virtual screen size to 16:9 aspect ratio
+        Gdx.input.setInputProcessor(this.stage);
     }
 
     /**
@@ -78,21 +78,21 @@ public class EndScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        this.stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
 
-        stage.getBatch().begin();
-        final float scaleX = stage.getViewport().getWorldWidth() / to_render.getWidth();
-        final float scaleY = stage.getViewport().getWorldHeight() / to_render.getHeight();
+        this.stage.getBatch().begin();
+        final float scaleX = this.stage.getViewport().getWorldWidth() / to_render.getWidth();
+        final float scaleY = this.stage.getViewport().getWorldHeight() / to_render.getHeight();
         final float scale = Math.min(scaleX, scaleY);
-        final float width = to_render.getWidth() * scale;
-        final float height = to_render.getHeight() * scale;
-        final float x = (stage.getViewport().getWorldWidth() - width) / 2;
-        final float y = (stage.getViewport().getWorldHeight() - height) / 2;
-        stage.getBatch().draw(to_render, x, y, width, height);
-        this.font.draw(stage.getBatch(),player_score, 750, 300);
-        stage.getBatch().end();
+        final float width = this.to_render.getWidth() * scale;
+        final float height = this.to_render.getHeight() * scale;
+        final float x = (this.stage.getViewport().getWorldWidth() - width) / 2;
+        final float y = (this.stage.getViewport().getWorldHeight() - height) / 2;
+        this.stage.getBatch().draw(this.to_render, x, y, width, height);
+        this.font.draw(this.stage.getBatch(),this.player_score, 750, 300);
+        this.stage.getBatch().end();
 
-        stage.draw();
+        this.stage.draw();
     }
 
     /**
@@ -103,7 +103,7 @@ public class EndScreen implements Screen {
      */
     @Override
     public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
+        this.stage.getViewport().update(width, height, true);
     }
 
     @Override
@@ -124,7 +124,7 @@ public class EndScreen implements Screen {
      */
     @Override
     public void dispose() {
-        stage.dispose();
-        to_render.dispose();
+        this.stage.dispose();
+        this.to_render.dispose();
     }
 }

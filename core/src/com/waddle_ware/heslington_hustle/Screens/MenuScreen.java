@@ -31,8 +31,8 @@ public class MenuScreen implements Screen {
      */
     public MenuScreen(HeslingtonHustle game) {
         this.game = game;
-        stage = new Stage(new FitViewport(1920, 1080));
-        Gdx.input.setInputProcessor(stage);
+        this.stage = new Stage(new FitViewport(1920, 1080));
+        Gdx.input.setInputProcessor(this.stage);
         this.background  = new Texture("MenuScreen.png");
         initialiseMenu(); // Add menu elements
     }
@@ -59,7 +59,7 @@ public class MenuScreen implements Screen {
         menu_group.setFillParent(true);
         menu_group.center(); // centre align vertically
         menu_group.align(Align.bottom);
-        stage.addActor(menu_group);
+        this.stage.addActor(menu_group);
 
         // Play button
         ImageButton play_button = new ImageButton(createTexRegDraw("PlayButton.png"));
@@ -99,7 +99,7 @@ public class MenuScreen implements Screen {
      */
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(stage);
+        Gdx.input.setInputProcessor(this.stage);
     }
 
     /**
@@ -112,20 +112,20 @@ public class MenuScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        this.stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
 
-        stage.getBatch().begin();
-        final float scaleX = stage.getViewport().getWorldWidth() / background.getWidth();
-        final float scaleY = stage.getViewport().getWorldHeight() / background.getHeight();
+        this.stage.getBatch().begin();
+        final float scaleX = this.stage.getViewport().getWorldWidth() / this.background.getWidth();
+        final float scaleY = this.stage.getViewport().getWorldHeight() / this.background.getHeight();
         final float scale = Math.min(scaleX, scaleY);
-        final float width = background.getWidth() * scale;
-        final float height = background.getHeight() * scale;
-        final float x = (stage.getViewport().getWorldWidth() - width) / 2;
-        final float y = (stage.getViewport().getWorldHeight() - height) / 2;
-        stage.getBatch().draw(background, x, y, width, height);
-        stage.getBatch().end();
+        final float width = this.background.getWidth() * scale;
+        final float height = this.background.getHeight() * scale;
+        final float x = (this.stage.getViewport().getWorldWidth() - width) / 2;
+        final float y = (this.stage.getViewport().getWorldHeight() - height) / 2;
+        this.stage.getBatch().draw(this.background, x, y, width, height);
+        this.stage.getBatch().end();
 
-        stage.draw();
+        this.stage.draw();
     }
 
     /**
@@ -136,7 +136,7 @@ public class MenuScreen implements Screen {
      */
     @Override
     public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
+        this.stage.getViewport().update(width, height, true);
     }
 
     @Override
@@ -162,7 +162,7 @@ public class MenuScreen implements Screen {
      */
     @Override
     public void dispose() {
-        stage.dispose();
-        background.dispose();
+        this.stage.dispose();
+        this.background.dispose();
     }
 }
