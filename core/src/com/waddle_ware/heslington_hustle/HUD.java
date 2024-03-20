@@ -62,11 +62,11 @@ public class HUD {
      * @param batch The Batch object used for rendering.
      */
     public void render(Batch batch) {
-        this.font.draw(batch,this.energy,       580, 400);
-        this.font.draw(batch,this.time,         580, 380);
-        this.font.draw(batch,this.studied,      580, 360);
-        this.font.draw(batch,this.eaten,        580, 340);
-        this.font.draw(batch,this.current_day,  580, 320);
+        this.font.draw(batch, this.energy,       580, 400);
+        this.font.draw(batch, this.time,         580, 380);
+        this.font.draw(batch, this.studied,      580, 360);
+        this.font.draw(batch, this.eaten,        580, 340);
+        this.font.draw(batch, this.current_day,  580, 320);
     }
 
     /**

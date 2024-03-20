@@ -159,11 +159,11 @@ public class Avatar {
      * @param renderer The OrthogonalTiledMapRenderer used for rendering.
      */
     public void render(OrthogonalTiledMapRenderer renderer) {
-        Animation<TextureRegion> animation = PlayerAnimator.createAnimation(velocity);
+        Animation<TextureRegion> animation = PlayerAnimator.createAnimation(this.velocity);
         state_time += Gdx.graphics.getDeltaTime();
         TextureRegion current_frame = animation.getKeyFrame(state_time, true);
 
-        renderer.getBatch().draw(current_frame, player_x, player_y, player_size, player_size);
+        renderer.getBatch().draw(current_frame, this.player_x, this.player_y, this.player_size, this.player_size);
     }
 
     /**
@@ -175,18 +175,18 @@ public class Avatar {
     public void handleInput() {
         boolean x_keys_pressed = false, y_keys_pressed = false;
         // Move player sprite based on key input
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) { velocity.y += ACCELERATION; y_keys_pressed = true;}
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) { velocity.y -= ACCELERATION; y_keys_pressed = true;}
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) { velocity.x += ACCELERATION; x_keys_pressed = true;}
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) { velocity.x -= ACCELERATION; x_keys_pressed = true;}
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) { this.velocity.y += ACCELERATION; y_keys_pressed = true;}
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) { this.velocity.y -= ACCELERATION; y_keys_pressed = true;}
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) { this.velocity.x += ACCELERATION; x_keys_pressed = true;}
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) { this.velocity.x -= ACCELERATION; x_keys_pressed = true;}
 
         // Apply friction if no movement keys are pressed
-        if(!x_keys_pressed) velocity.x *= FRICTION;
-        if(!y_keys_pressed) velocity.y *= FRICTION;
+        if(!x_keys_pressed) this.velocity.x *= FRICTION;
+        if(!y_keys_pressed) this.velocity.y *= FRICTION;
 
         // Cap the player's velocity to ensure it stays within the max velocity
-        velocity.x = MathUtils.clamp(velocity.x, -MAX_VELOCITY, MAX_VELOCITY);
-        velocity.y = MathUtils.clamp(velocity.y, -MAX_VELOCITY, MAX_VELOCITY);
+        this.velocity.x = MathUtils.clamp(this.velocity.x, -MAX_VELOCITY, MAX_VELOCITY);
+        this.velocity.y = MathUtils.clamp(this.velocity.y, -MAX_VELOCITY, MAX_VELOCITY);
     }
 
     /**
@@ -195,7 +195,7 @@ public class Avatar {
      * @return The x-coordinate of the player.
      */
     public float getPlayerX() {
-        return player_x;
+        return this.player_x;
     }
 
     /**
@@ -204,7 +204,7 @@ public class Avatar {
      * @return The y-coordinate of the player.
      */
     public float getPlayerY() {
-        return player_y;
+        return this.player_y;
     }
 
     /**
@@ -214,8 +214,8 @@ public class Avatar {
      * @param y The y-coordinate to set.
      */
     public void setPlayerLoc(float x, float y){
-        player_x = x;
-        player_y = y;
+        this.player_x = x;
+        this.player_y = y;
     }
 
     /**

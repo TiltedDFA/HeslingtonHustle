@@ -66,42 +66,42 @@ public class PlayScreen implements Screen {
     @Override
     public void show() {
         // Create camera and viewport
-        camera = new OrthographicCamera();
+        this.camera = new OrthographicCamera();
 
-        core = new Core();
+        this.core = new Core();
         // Load tile Map
-        tile_map = new TmxMapLoader().load("map.tmx"); // load tile map
-        map_renderer = new OrthogonalTiledMapRenderer(tile_map);
+        this.tile_map = new TmxMapLoader().load("map.tmx"); // load tile map
+        this.map_renderer = new OrthogonalTiledMapRenderer(this.tile_map);
 
         // Set target aspect ratio for tile map
         float target_aspect_ratio = 16f / 9f;
 
         // Calculate world dimensions
-        int map_tile_width = tile_map.getProperties().get("width", Integer.class);
-        int tile_width = tile_map.getProperties().get("tilewidth", Integer.class);
-        world_width = map_tile_width * tile_width;
-        world_height = world_width / target_aspect_ratio;
-        System.out.printf("width: %f, height: %f", world_width,world_height);
+        final int map_tile_width = this.tile_map.getProperties().get("width", Integer.class);
+        final int tile_width = this.tile_map.getProperties().get("tilewidth", Integer.class);
+        this.world_width = map_tile_width * tile_width;
+        this.world_height = this.world_width / target_aspect_ratio;
+        System.out.printf("width: %f, height: %f", this.world_width, this.world_height);
 
-        player = new Avatar(0, 0, world_height, world_width);
-        player.setPlayerLoc(260, 250);
+        this.player = new Avatar(0, 0, this.world_height, this.world_width);
+        this.player.setPlayerLoc(260, 250);
 
         // Set the viewport to use the whole screen with the desired aspect ratio
-        viewport = new FitViewport(world_width, world_height, camera);
-        hud = new HUD(core);
+        this.viewport = new FitViewport(this.world_width, this.world_height, this.camera);
+        this.hud = new HUD(this.core);
 
         // Center the camera on the tile map
-        camera.position.set(world_width / 2f, world_height / 2f, 0);
-        camera.update();
+        this.camera.position.set(this.world_width / 2f, this.world_height / 2f, 0);
+        this.camera.update();
 
         // Adjust the viewport if needed to ensure the tile map fills the entire screen (for tile maps that are not 16:9)
         float aspect_ratio = (float) Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
         if (aspect_ratio > target_aspect_ratio) {
-            float new_world_height = world_width * aspect_ratio;
-            float y_offset = (new_world_height - world_height) / 2f;
-            viewport.setWorldSize(world_width, new_world_height);
-            camera.position.add(0, y_offset, 0);
-            camera.update();
+            final float new_world_height = this.world_width * aspect_ratio;
+            final float y_offset = (new_world_height - this.world_height) / 2f;
+            this.viewport.setWorldSize(this.world_width, new_world_height);
+            this.camera.position.add(0, y_offset, 0);
+            this.camera.update();
         }
     }
 
@@ -113,37 +113,37 @@ public class PlayScreen implements Screen {
      */
     @Override
     public void render(float delta) {
-        if(core.hasEnded()) {
-            game.setScreen(new EndScreen(game, !core.hasPlayerFailed(), core.generateScore()));
+        if(this.core.hasEnded()) {
+            this.game.setScreen(new EndScreen(this.game, !this.core.hasPlayerFailed(), this.core.generateScore()));
         }
         handleInput(); // Call method to handle inputs
-        player.handleInput();
+        this.player.handleInput();
 
         // Update camera and viewport
-        camera.update();
-        map_renderer.setView(camera);
-        hud.update(core);
-        player.update(tile_map);
-        core.update();
+        this.camera.update();
+        this.map_renderer.setView(this.camera);
+        this.hud.update(this.core);
+        this.player.update(this.tile_map);
+        this.core.update();
 
         // Clear the screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        map_renderer.render(); // Render tile map
+        this.map_renderer.render(); // Render tile map
 
         // Render player sprite
-        map_renderer.getBatch().begin();
-        player.render(map_renderer);// Draw sprite in updated position with specified dimensions
+        this.map_renderer.getBatch().begin();
+        this.player.render(this.map_renderer);// Draw sprite in updated position with specified dimensions
 
-        hud.render(map_renderer.getBatch());
-        map_renderer.getBatch().end();
+        this.hud.render(this.map_renderer.getBatch());
+        this.map_renderer.getBatch().end();
 
         checkInteractionProximity(); // Check for proximity and update interaction pop-ups
 
         // Render the pop-up message if it exists
-        if (interaction_popup != null) {
-            interaction_popup.render(map_renderer.getBatch(), popupX, popupY); // Adjust popupX and popupY as needed
+        if (this.interaction_popup != null) {
+            this.interaction_popup.render(this.map_renderer.getBatch(), this.popupX, this.popupY); // Adjust popupX and popupY as needed
         }
     }
 
@@ -155,7 +155,7 @@ public class PlayScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         // Update viewport when the window is resized
-        viewport.update(width, height);
+        this.viewport.update(width, height);
     }
 
     /**
@@ -163,25 +163,26 @@ public class PlayScreen implements Screen {
      * Checks boundaries to prevent the sprite from moving outside the game window.
      */
     private void handleInput() {
-        //Test for core
-        if(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.S)) {
-            this.core.interactedWith(ActivityType.Study);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.F)) {
-            this.core.interactedWith(ActivityType.Food);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-            this.core.interactedWith(ActivityType.Sleep);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-            this.core.interactedWith(ActivityType.Recreation);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.W)) {
-            this.game.setScreen(new EndScreen(game, true, 2342));
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.L)) {
-            this.game.setScreen(new EndScreen(game, false, 7613));
-        }
+        //Used for testing
+//        if(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+//            this.core.interactedWith(ActivityType.Study);
+//        }
+//        if(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+//            this.core.interactedWith(ActivityType.Food);
+//        }
+//        if(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+//            this.core.interactedWith(ActivityType.Sleep);
+//        }
+//        if(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+//            this.core.interactedWith(ActivityType.Recreation);
+//        }
+//        if(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+//            this.game.setScreen(new EndScreen(game, true, 2342));
+//        }
+//        if(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.L)) {
+//            this.game.setScreen(new EndScreen(game, false, 7613));
+//        }
+
         // Toggle fullscreen when F11 is pressed
         if (Gdx.input.isKeyJustPressed(Input.Keys.F11)) {
             toggleFullscreen();
@@ -199,12 +200,12 @@ public class PlayScreen implements Screen {
      */
     private void handleInteraction() {
         // Get players current position
-        final float playerX = player.getPlayerX();
-        final float playerY = player.getPlayerY();
+        final float playerX = this.player.getPlayerX();
+        final float playerY = this.player.getPlayerY();
 
         // Check for interaction with each activity location
         if (isPlayerWithinInteractionArea(playerX, playerY, study_location)) {
-            final ResourceExitConditions exit_value = core.interactedWith(ActivityType.Study);
+            final ResourceExitConditions exit_value = this.core.interactedWith(ActivityType.Study);
             if(exit_value.getConditions() == ExitConditions.IsOk)
                 return;
             //visually output why the interaction failed
@@ -212,20 +213,20 @@ public class PlayScreen implements Screen {
             System.out.printf("%s%s\n",exit_value.getTypes().toString(),exit_value.getConditions().toString());
         }
         if (isPlayerWithinInteractionArea(playerX, playerY, recreation_location)) {
-            final ResourceExitConditions exit_value = core.interactedWith(ActivityType.Recreation);
+            final ResourceExitConditions exit_value = this.core.interactedWith(ActivityType.Recreation);
             if(exit_value.getConditions() == ExitConditions.IsOk)
                 return;
             System.out.printf("%s%s\n",exit_value.getTypes().toString(),exit_value.getConditions().toString());
         }
         if (isPlayerWithinInteractionArea(playerX, playerY, food_location)) { // Food and sleep should not be able to fail, so they can remain unchecked
-            core.interactedWith(ActivityType.Food);
+            this.core.interactedWith(ActivityType.Food);
             return;
         }
         if (isPlayerWithinInteractionArea(playerX, playerY, sleep_location)) {
-            if(core.isLastDay()) {
-                game.setScreen(new EndScreen(game, !core.hasPlayerFailed(), core.generateScore()));
+            if(this.core.isLastDay()) {
+                game.setScreen(new EndScreen(this.game, !this.core.hasPlayerFailed(), this.core.generateScore()));
             }
-            else core.interactedWith(ActivityType.Sleep);
+            else this.core.interactedWith(ActivityType.Sleep);
         }
     }
 
@@ -236,30 +237,30 @@ public class PlayScreen implements Screen {
      */
     private void checkInteractionProximity() {
         // Get players current position
-        float playerX = player.getPlayerX();
-        float playerY = player.getPlayerY();
+        final float playerX = this.player.getPlayerX();
+        final float playerY = this.player.getPlayerY();
 
         // Check if the player is within range of an activity location
-        if (isPlayerWithinInteractionArea(playerX, playerY, study_location)) {
-            interaction_popup = new InteractionPopup("Press E to "+ study_location.getName());
+        if (isPlayerWithinInteractionArea(playerX, playerY, this.study_location)) {
+            this.interaction_popup = new InteractionPopup("Press E to "+ this.study_location.getName());
             // set pop up above players location
-            popupX = playerX;
-            popupY = playerY + 50;
-        } else if (isPlayerWithinInteractionArea(playerX, playerY, recreation_location)) {
-            interaction_popup = new InteractionPopup("Press E to "+ recreation_location.getName());
-            popupX = playerX;
-            popupY = playerY + 50;
-        } else if (isPlayerWithinInteractionArea(playerX, playerY, food_location)) {
-            interaction_popup = new InteractionPopup("Press E to "+ food_location.getName());
-            popupX = playerX;
-            popupY = playerY + 50;
-        } else if (isPlayerWithinInteractionArea(playerX, playerY, sleep_location)) {
-            interaction_popup = new InteractionPopup("Press E to "+ sleep_location.getName());
-            popupX = playerX;
-            popupY = playerY + 50;
+            this.popupX = playerX;
+            this.popupY = playerY + 50;
+        } else if (isPlayerWithinInteractionArea(playerX, playerY, this.recreation_location)) {
+            this.interaction_popup = new InteractionPopup("Press E to "+ this.recreation_location.getName());
+            this.popupX = playerX;
+            this.popupY = playerY + 50;
+        } else if (isPlayerWithinInteractionArea(playerX, playerY, this.food_location)) {
+            this.interaction_popup = new InteractionPopup("Press E to "+ this.food_location.getName());
+            this.popupX = playerX;
+            this.popupY = playerY + 50;
+        } else if (isPlayerWithinInteractionArea(playerX, playerY, this.sleep_location)) {
+            this.interaction_popup = new InteractionPopup("Press E to "+ this.sleep_location.getName());
+            this.popupX = playerX;
+            this.popupY = playerY + 50;
         } else {
             // Hide message if the player is out of range
-            interaction_popup = null;
+            this.interaction_popup = null;
         }
     }
 
@@ -269,12 +270,12 @@ public class PlayScreen implements Screen {
      * If the application is in windowed mode, it switches to fullscreen mode using the current display mode.
      */
     private void toggleFullscreen() {
-        is_fullscreen = !is_fullscreen;
+        this.is_fullscreen = !this.is_fullscreen;
 
-        if (is_fullscreen) {
+        if (this.is_fullscreen) {
             Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
         } else {
-            Gdx.graphics.setWindowedMode((int) world_width, (int) world_height);
+            Gdx.graphics.setWindowedMode((int) this.world_width, (int) this.world_height);
         }
     }
 
@@ -309,10 +310,10 @@ public class PlayScreen implements Screen {
     /** Called when the application is destroyed. Preceded by a call to {@link #pause()}. */
     @Override
     public void dispose() {
-        tile_map.dispose();
-        map_renderer.dispose();
-        player.dispose();
-        hud.dispose();
-        interaction_popup.dispose();
+        this.tile_map.dispose();
+        this.map_renderer.dispose();
+        this.player.dispose();
+        this.hud.dispose();
+        this.interaction_popup.dispose();
     }
 }

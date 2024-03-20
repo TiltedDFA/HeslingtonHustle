@@ -43,7 +43,7 @@ public class InteractionPopup {
      */
     public void render(Batch batch, float x, float y) {
         batch.begin();
-        font.draw(batch, message, x, y);
+        this.font.draw(batch, this.message, x, y);
         batch.end();
     }
 
@@ -51,6 +51,6 @@ public class InteractionPopup {
      * Disposes of the font used for rendering the pop-up message.
      */
     public void dispose() {
-        font.dispose();
+        this.font.dispose();
     }
 }
